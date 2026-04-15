@@ -1,0 +1,29 @@
+services:
+  web:
+    image: nginx:alpine
+    container_name: micro-erp-nginx
+    volumes:
+      - ./app:/app:ro #bind mount
+      - ./docker/nginx:/etc/nginx/conf.d:ro #bind mount nginx config directly into the container
+    ports:
+      - 80:80
+  php:
+    container_name: micro-erp-php
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    volumes:
+      - ./app:/app #bind mount
+    expose:
+      - 9000
+  db:
+    image: mysql:8.0.45
+    container_name: micro-erp-mysql
+    volumes:
+      - db-data:/var/lib/mysql #You always reference the key, not the name a.k.a. db-data. MySQL by default stores data in /var/lib/mysql
+    env_file:
+      - .env
+
+volumes:
+  db-data:
+    name: "micro-erp-data"
