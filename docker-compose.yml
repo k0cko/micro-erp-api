@@ -14,6 +14,8 @@ services:
       dockerfile: docker/php/Dockerfile
     volumes:
       - ./app:/app #bind mount
+    env_file:
+      - .env
     expose:
       - 9000
   db:
@@ -23,6 +25,8 @@ services:
       - db-data:/var/lib/mysql #You always reference the key, not the name a.k.a. db-data. MySQL by default stores data in /var/lib/mysql
     env_file:
       - .env
+    ports:
+      - 3306:3306
 
 volumes:
   db-data:

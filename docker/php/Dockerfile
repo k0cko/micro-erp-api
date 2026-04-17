@@ -11,6 +11,9 @@ RUN composer install --no-scripts
 
 FROM php:8.4.20-fpm-alpine AS base
 
+RUN docker-php-ext-install \
+    pdo_mysql
+
 WORKDIR /app
 
 COPY --from=build /usr/bin/composer /usr/bin/composer
