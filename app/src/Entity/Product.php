@@ -48,6 +48,12 @@ class Product
         return new self($name, $description);
     }
 
+    public function update(string $name, ?string $description = null): void
+    {
+        $this->rename($name);
+        $this->updateDescription($description);
+    }
+
     public function getId(): ?int
     {
         return $this->id;

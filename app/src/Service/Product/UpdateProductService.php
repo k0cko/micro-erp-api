@@ -8,25 +8,23 @@ use App\Exception\DuplicateResourceException;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
-final class CreateProductService
+final class UpdateProductService
 {
     public function __construct(
         private readonly ProductRepository $productRepository,
-        private readonly EntityManagerInterface $entityManager,
+        private readonly EntityManagerInterface $entityManagerInterface
     ) {}
 
-    public function execute(ProductInput $input): int
+    public function execute(ProductInput $input, Product $product): Product
     {
-        if ($this->productRepository->existsByName($input->name)) {
+        if ($this->productRepository->existsByName($input->name, $product->getId())) {
             throw DuplicateResourceException::forField('Product', 'name', $input->name);
         }
 
-        $product = Product::create($input->name, $input->description);
+        $product->update($input->name, $input->description);
 
-        $this->entityManager->persist($product);
-        $this->entityManager->flush();
-        
-        return $product->getId();
+        $this->entityManagerInterface->flush();
+
+        return $product;
     }
-
 }

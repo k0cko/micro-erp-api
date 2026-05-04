@@ -16,13 +16,21 @@ class ProductRepository extends ServiceEntityRepository
         parent::__construct($registry, Product::class);
     }
 
-    public function existsByName(string $name): bool
+    public function existsByName(string $name, ?int $id = null): bool
     {
-        return $this->createQueryBuilder('p')
+        $query = $this->createQueryBuilder('p')
             ->select('1')
             ->where('LOWER(p.name) = LOWER(:name)')
             ->setParameter('name', $name)
-            ->setMaxResults(1)
+            ->setMaxResults(1);
+
+        if ($id !== null) {
+            $query
+                ->andWhere('p.id != :id')
+                ->setParameter('id', $id);
+        }
+        
+        return $query
             ->getQuery()
             ->getOneOrNullResult() !== null;
     }

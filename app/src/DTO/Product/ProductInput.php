@@ -4,7 +4,7 @@ namespace App\DTO\Product;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-final readonly class CreateProductInput {
+final readonly class ProductInput {
 
     public function __construct(
         #[Assert\NotBlank(message: 'name must not be blank.')]
