@@ -15,6 +15,8 @@ class Product
     #[ORM\Column]
     private ?int $id = null;
 
+    
+    /** Unique case-insensitively. See migration Version20260504084413. */
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
@@ -33,10 +35,17 @@ class Product
     #[ORM\OneToMany(targetEntity: ProductMovement::class, mappedBy: 'product')]
     private Collection $productMovements;
 
-    public function __construct()
+    public function __construct(string $name, ?string $description)
     {
+        $this->name = $name;
+        $this->description = $description;
         $this->warehouseProducts = new ArrayCollection();
         $this->productMovements = new ArrayCollection();
+    }
+
+    public static function create(string $name, ?string $description = null): self
+    {
+        return new self($name, $description);
     }
 
     public function getId(): ?int
@@ -49,11 +58,9 @@ class Product
         return $this->name;
     }
 
-    public function setName(string $name): static
+    public function rename(string $name): void
     {
         $this->name = $name;
-
-        return $this;
     }
 
     public function getDescription(): ?string
@@ -61,11 +68,9 @@ class Product
         return $this->description;
     }
 
-    public function setDescription(?string $description): static
+    public function updateDescription(?string $description): void
     {
         $this->description = $description;
-
-        return $this;
     }
 
     /**
