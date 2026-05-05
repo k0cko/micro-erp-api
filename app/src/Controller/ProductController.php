@@ -5,7 +5,9 @@ namespace App\Controller;
 use App\DTO\Product\ProductInput;
 use App\Entity\Product;
 use App\Exception\DuplicateResourceException;
+use App\Exception\ResourceInUseException;
 use App\Service\Product\CreateProductService;
+use App\Service\Product\DeleteProductService;
 use App\Service\Product\UpdateProductService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -18,6 +20,7 @@ final class ProductController extends AbstractController
     public function __construct(
         private readonly CreateProductService $createProductService,
         private readonly UpdateProductService $updateProductService,
+        private readonly DeleteProductService $deleteProductService,
     ) {}
 
     #[Route('', methods: ['POST'])]
@@ -47,5 +50,19 @@ final class ProductController extends AbstractController
         }
 
         return $this->json($product, JsonResponse::HTTP_OK);
+    }
+
+    #[Route('/{id}', methods: ['DELETE'])]
+    public function delete(
+        Product $product
+    ): JsonResponse
+    {
+        try {
+            $this->deleteProductService->execute($product);
+        } catch (ResourceInUseException $e) {
+            return $this->json(['error' => $e->getMessage()], JsonResponse::HTTP_CONFLICT);
+        }
+
+        return $this->json(null, JsonResponse::HTTP_NO_CONTENT);
     }
 }
