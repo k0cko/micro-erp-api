@@ -40,11 +40,22 @@ class Warehouse
     #[ORM\OneToMany(targetEntity: ProductMovement::class, mappedBy: 'warehouse')]
     private Collection $productMovements;
 
-    public function __construct()
+    public function __construct(string $name)
     {
+        $this->name = $name;
         $this->inquiries = new ArrayCollection();
         $this->warehouseProducts = new ArrayCollection();
         $this->productMovements = new ArrayCollection();
+    }
+
+    public static function create(string $name): self
+    {
+        return new self($name);
+    }
+
+    public function update(string $name): void
+    {
+        $this->name = $name;
     }
 
     public function getId(): ?int

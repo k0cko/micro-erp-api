@@ -10,7 +10,7 @@ final class ResourceInUseException extends \RuntimeException
     ): self
     {
         return new self(
-            sprintf('Cannot delete %s. It is already in use by %s.', $entity, $usedByEntity)
+            sprintf('Cannot delete %s. It has associated %ss.', $entity, $usedByEntity)
         );
     }    
 }

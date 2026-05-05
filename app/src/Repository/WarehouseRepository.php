@@ -16,6 +16,25 @@ class WarehouseRepository extends ServiceEntityRepository
         parent::__construct($registry, Warehouse::class);
     }
 
+    public function existsByName(string $name, ?int $id = null): bool
+    {
+        $query = $this->createQueryBuilder('w')
+            ->select('1')
+            ->where('LOWER(w.name) = LOWER(:name)')
+            ->setParameter('name', $name)
+            ->setMaxResults(1);
+
+        if ($id !== null) {
+            $query
+                ->andWhere('w.id != :id')
+                ->setParameter('id', $id);
+        }
+
+        return $query
+            ->getQuery()
+            ->getOneOrNullResult() !== null;
+    }
+
     //    /**
     //     * @return Warehouse[] Returns an array of Warehouse objects
     //     */
