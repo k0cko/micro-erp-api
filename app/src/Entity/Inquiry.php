@@ -2,12 +2,15 @@
 
 namespace App\Entity;
 
+use App\Entity\Trait\TimestampableTrait;
 use App\Enum\InquiryStatus;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\MappedSuperclass]
 abstract class Inquiry
 {
+    use TimestampableTrait;
+
     #[ORM\Column]
     private ?\DateTimeImmutable $date = null;
 

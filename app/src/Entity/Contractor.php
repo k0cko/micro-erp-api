@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Trait\TimestampableTrait;
 use App\Enum\ContractorType;
 use App\Repository\ContractorRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -9,8 +10,11 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ContractorRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Contractor
 {
+    use TimestampableTrait;
+    
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]

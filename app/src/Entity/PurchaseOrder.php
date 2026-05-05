@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PurchaseOrderRepository::class)]
 #[ORM\Table(name: '`purchase_order`')]
+#[ORM\HasLifecycleCallbacks]
 class PurchaseOrder extends Inquiry
 {
     #[ORM\Id]

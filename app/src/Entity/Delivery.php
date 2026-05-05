@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: DeliveryRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Delivery extends Inquiry
 {
     #[ORM\Id]

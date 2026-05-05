@@ -2,12 +2,15 @@
 
 namespace App\Entity;
 
+use App\Entity\Trait\TimestampableTrait;
 use App\Enum\InquiryProductStatus;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\MappedSuperclass]
 abstract class InquiryProduct
 {
+    use TimestampableTrait;
+
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?Product $product = null;
