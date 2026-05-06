@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\DTO\Contractor\ContractorInput;
 use App\Entity\Trait\TimestampableTrait;
 use App\Enum\ContractorType;
 use App\Repository\ContractorRepository;
@@ -27,14 +28,34 @@ class Contractor
     private ?ContractorType $type = null;
 
     /**
-     * @var Collection<int, Inquiry>
+     * @var Collection<int, PurchaseOrder>
      */
-    #[ORM\OneToMany(targetEntity: Inquiry::class, mappedBy: 'contractor')]
-    private Collection $inquiries;
+    #[ORM\OneToMany(targetEntity: PurchaseOrder::class, mappedBy: 'contractor')]
+    private Collection $purchaseOrders;
 
-    public function __construct()
+    /**
+     * @var Collection<int, Delivery>
+     */
+    #[ORM\OneToMany(targetEntity: Delivery::class, mappedBy: 'contractor')]
+    private Collection $deliveries;
+
+    public function __construct(string $name, ContractorType $type)
     {
-        $this->inquiries = new ArrayCollection();
+        $this->name = $name;
+        $this->type = $type;
+        $this->purchaseOrders = new ArrayCollection();
+        $this->deliveries = new ArrayCollection();
+    }
+
+    public static function create(ContractorInput $input): self
+    {
+        return new self($input->name, ContractorType::from($input->type));
+    }
+
+    public function update(string $name, ContractorType $type): void
+    {
+        $this->name = $name;
+        $this->type = $type;
     }
 
     public function getId(): ?int
@@ -67,27 +88,18 @@ class Contractor
     }
 
     /**
-     * @return Collection<int, Inquiry>
+     * @return Collection<int, PurchaseOrder>
      */
-    public function getInquiries(): Collection
+    public function getPurchaseOrders(): Collection
     {
-        return $this->inquiries;
+        return $this->purchaseOrders;
     }
 
-    public function addInquiry(Inquiry $inquiry): static
+    /**
+     * @return Collection<int, Delivery>
+     */
+    public function getDeliveries(): Collection
     {
-        if (!$this->inquiries->contains($inquiry)) {
-            $this->inquiries->add($inquiry);
-            $inquiry->setContractor($this);
-        }
-
-        return $this;
-    }
-
-    public function removeInquiry(Inquiry $inquiry): static
-    {
-        $this->inquiries->removeElement($inquiry);
-
-        return $this;
+        return $this->deliveries;
     }
 }

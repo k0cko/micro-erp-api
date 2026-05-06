@@ -16,6 +16,25 @@ class ContractorRepository extends ServiceEntityRepository
         parent::__construct($registry, Contractor::class);
     }
 
+    public function existsByName(string $name, ?int $id = null): bool
+    {
+        $query = $this->createQueryBuilder('c')
+            ->select('1')
+            ->where('LOWER(c.name) = LOWER(:name)')
+            ->setParameter('name', $name)
+            ->setMaxResults(1);
+            
+        if ($id !== null) {
+            $query
+                ->andWhere('c.id != :id')
+                ->setParameter('id', $id);
+        }
+
+        return $query
+            ->getQuery()
+            ->getOneOrNullResult() !== null;
+    }
+
 //    /**
 //     * @return Contractor[] Returns an array of Contractor objects
 //     */
