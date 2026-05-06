@@ -18,7 +18,7 @@ class PurchaseOrderProduct extends InquiryProduct
 
     #[ORM\ManyToOne(inversedBy: 'purchaseOrderProducts')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?PurchaseOrder $purchase_order = null;
+    private ?PurchaseOrder $purchaseOrder = null;
 
     /**
      * @var Collection<int, ProductMovement>
@@ -38,12 +38,12 @@ class PurchaseOrderProduct extends InquiryProduct
 
     public function getPurchaseOrder(): ?PurchaseOrder
     {
-        return $this->purchase_order;
+        return $this->purchaseOrder;
     }
 
-    public function setPurchaseOrder(?PurchaseOrder $purchase_order): static
+    public function setPurchaseOrder(?PurchaseOrder $purchaseOrder): static
     {
-        $this->purchase_order = $purchase_order;
+        $this->purchaseOrder = $purchaseOrder;
 
         return $this;
     }

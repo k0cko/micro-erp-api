@@ -1,0 +1,14 @@
+<?php
+
+namespace App\DTO\User;
+
+final readonly class UserResponse
+{
+    public function __construct(
+        public string $username,
+        public string $firstName,
+        public string $lastName,
+        public \DateTimeImmutable $createdAt,
+        public \DateTimeImmutable $updatedAt,
+    ) {}
+}

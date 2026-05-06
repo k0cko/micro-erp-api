@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\DTO\User\CreateUserInput;
 use App\Entity\Trait\TimestampableTrait;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -38,10 +39,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column(length: 64)]
-    private ?string $first_name = null;
+    private ?string $firstName = null;
 
     #[ORM\Column(length: 64)]
-    private ?string $last_name = null;
+    private ?string $lastName = null;
 
     /**
      * @var Collection<int, Inquiry>
@@ -49,9 +50,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Inquiry::class, mappedBy: 'user')]
     private Collection $inquiries;
 
-    public function __construct()
+    public function __construct(string $username, string $password, string $firstName, string $lastName)
     {
+        $this->username = $username;
+        $this->password = $password;
+        $this->firstName = $firstName;
+        $this->lastName = $lastName;
         $this->inquiries = new ArrayCollection();
+    }
+
+    public static function create(CreateUserInput $input, string $hashedPassword): self
+    {
+        return new self($input->username, $hashedPassword, $input->firstName, $input->lastName);
+    }
+
+    public function update(string $firstName, string $lastName): void
+    {
+        $this->updateFirstName($firstName);
+        $this->updateLastName($lastName);
     }
 
     public function getId(): ?int
@@ -131,24 +147,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getFirstName(): ?string
     {
-        return $this->first_name;
+        return $this->firstName;
     }
 
-    public function setFirstName(string $first_name): static
+    public function updateFirstName(string $firstName): static
     {
-        $this->first_name = $first_name;
+        $this->firstName = $firstName;
 
         return $this;
     }
 
     public function getLastName(): ?string
     {
-        return $this->last_name;
+        return $this->lastName;
     }
 
-    public function setLastName(string $last_name): static
+    public function updateLastName(string $lastName): static
     {
-        $this->last_name = $last_name;
+        $this->lastName = $lastName;
 
         return $this;
     }

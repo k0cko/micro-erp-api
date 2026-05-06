@@ -30,10 +30,10 @@ class ProductMovement
     private ?int $quantity = null;
 
     #[ORM\ManyToOne(inversedBy: 'productMovements')]
-    private ?PurchaseOrderProduct $purchase_order_product = null;
+    private ?PurchaseOrderProduct $purchaseOrderProduct = null;
 
     #[ORM\ManyToOne(inversedBy: 'productMovements')]
-    private ?DeliveryProduct $delivery_product = null;
+    private ?DeliveryProduct $deliveryProduct = null;
 
     #[ORM\Column(enumType: ProductMovementType::class)]
     private ?ProductMovementType $type = null;
@@ -81,24 +81,24 @@ class ProductMovement
 
     public function getPurchaseOrderProduct(): ?PurchaseOrderProduct
     {
-        return $this->purchase_order_product;
+        return $this->purchaseOrderProduct;
     }
 
-    public function setPurchaseOrderProduct(?PurchaseOrderProduct $purchase_order_product): static
+    public function setPurchaseOrderProduct(?PurchaseOrderProduct $purchaseOrderProduct): static
     {
-        $this->purchase_order_product = $purchase_order_product;
+        $this->purchaseOrderProduct = $purchaseOrderProduct;
 
         return $this;
     }
 
     public function getDeliveryProduct(): ?DeliveryProduct
     {
-        return $this->delivery_product;
+        return $this->deliveryProduct;
     }
 
-    public function setDeliveryProduct(?DeliveryProduct $delivery_product): static
+    public function setDeliveryProduct(?DeliveryProduct $deliveryProduct): static
     {
-        $this->delivery_product = $delivery_product;
+        $this->deliveryProduct = $deliveryProduct;
 
         return $this;
     }
