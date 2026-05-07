@@ -8,6 +8,7 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use HashContext;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -68,6 +69,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->updateFirstName($firstName);
         $this->updateLastName($lastName);
+    }
+
+    public function changePassword(string $hashedPassword): void
+    {
+        $this->password = $hashedPassword;
     }
 
     public function getId(): ?int
