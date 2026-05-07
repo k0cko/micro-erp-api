@@ -24,7 +24,7 @@ final class CreateUserService
             throw DuplicateResourceException::forField('User', 'username', $input->username);
         }
 
-        $hashedPassword = $this->passwordHasher->hashPassword(new User('', '', '', ''), $input->confirmedPassword);
+        $hashedPassword = $this->passwordHasher->hashPassword(new User('', '', '', ''), $input->password);
 
         $user = User::create($input, $hashedPassword);
 

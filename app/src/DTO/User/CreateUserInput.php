@@ -9,9 +9,10 @@ final readonly class CreateUserInput
 {
     public function __construct(
         #[Assert\NotBlank(message: 'Username must not be blank.')]
-        #[Assert\Length(max: 180, maxMessage: 'Username cannot exceed 180 characters.')]
+        #[Assert\Length(max: 30, maxMessage: 'Username cannot exceed {{ limit }} characters.')]
         public readonly string $username,
         
+        #[Assert\Length(min: 8, minMessage: "Password must be at least {{ limit }} characters long")]
         #[Assert\NotBlank(message: 'Password must not be blank.')]
         public readonly string $password,
 

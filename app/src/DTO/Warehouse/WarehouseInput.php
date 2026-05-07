@@ -9,8 +9,8 @@ final readonly class WarehouseInput
     public function __construct(
         #[Assert\NotBlank(message: 'Name must not be blank.')]
         #[Assert\Length(
-            max: 255,
-            maxMessage: 'Name cannot exceed 255 characters.'
+            max: 60,
+            maxMessage: 'Name cannot exceed {{ limit }} characters.'
         )]
         public readonly string $name
     ) {}
