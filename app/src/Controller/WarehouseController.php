@@ -14,8 +14,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/warehouses')]
+#[IsGranted('ROLE_ADMIN')]
 final class WarehouseController extends AbstractController
 {
     public function __construct(
@@ -25,6 +27,7 @@ final class WarehouseController extends AbstractController
         private readonly DeleteWarehouseService $deleteWarehouseService,
     ) {}
 
+    #[IsGranted('ROLE_WORKER')]
     #[Route('', methods: ['GET'])]
     public function index(): JsonResponse
     {
@@ -65,11 +68,7 @@ final class WarehouseController extends AbstractController
         Warehouse $warehouse
     ): JsonResponse
     {
-        try {
-            $this->deleteWarehouseService->execute($warehouse);
-        } catch (ResourceInUseException $e) {
-            return $this->json(['error' => $e->getMessage()], JsonResponse::HTTP_CONFLICT);
-        }
+        $this->deleteWarehouseService->execute($warehouse);
 
         return $this->json(null, JsonResponse::HTTP_NO_CONTENT);
     }

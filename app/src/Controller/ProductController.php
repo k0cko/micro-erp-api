@@ -14,8 +14,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/products')]
+#[IsGranted('ROLE_ADMIN')]
 final class ProductController extends AbstractController
 {
     public function __construct(
@@ -26,6 +28,7 @@ final class ProductController extends AbstractController
     ) {}
 
     #[Route('', methods: ['GET'])]
+    #[IsGranted('ROLE_WORKER')]
     public function index(): JsonResponse
     {
         return $this->json($this->listProductService->execute(), JsonResponse::HTTP_OK);

@@ -2,6 +2,7 @@
 
 namespace App\DTO\User;
 
+use App\Enum\UserRole;
 use Symfony\Component\Serializer\Attribute\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -29,5 +30,9 @@ final readonly class CreateUserInput
         #[Assert\Length(max: 64, maxMessage: 'Last name cannot exceed 64 characters.')]
         #[SerializedName('last_name')]
         public readonly string $lastName,
+
+        #[Assert\NotBlank(message: 'Role must not be blank')]
+        #[Assert\Choice(callback: [UserRole::class, 'values'])]
+        public readonly string $role,
     ) {}
 }

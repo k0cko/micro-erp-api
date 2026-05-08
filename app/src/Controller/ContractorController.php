@@ -14,8 +14,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/contractors')]
+#[IsGranted('ROLE_ADMIN')]
 final class ContractorController extends AbstractController
 {
     public function __construct(
@@ -65,11 +67,7 @@ final class ContractorController extends AbstractController
         Contractor $contractor
     ): JsonResponse
     {
-        try {
-            $this->deleteContractorService->execute($contractor);
-        } catch (ResourceInUseException $e) {
-            return $this->json(['error' => $e->getMessage()], JsonResponse::HTTP_CONFLICT);
-        }
+        $this->deleteContractorService->execute($contractor);
 
         return $this->json(null, JsonResponse::HTTP_NO_CONTENT);
     }

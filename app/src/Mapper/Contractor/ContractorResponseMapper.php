@@ -12,7 +12,7 @@ final readonly class ContractorResponseMapper
         return new ContractorResponse(
             id: $contractor->getId(),
             name: $contractor->getName(),
-            type: $contractor->getType(),
+            type: $contractor->getType()->label(),
             createdAt: $contractor->getCreatedAt(),
             updatedAt: $contractor->getUpdatedAt(),
         );

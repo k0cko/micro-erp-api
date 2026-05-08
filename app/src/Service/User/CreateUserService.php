@@ -4,6 +4,7 @@ namespace App\Service\User;
 
 use App\DTO\User\CreateUserInput;
 use App\Entity\User;
+use App\Enum\UserRole;
 use App\Exception\DuplicateResourceException;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -25,7 +26,7 @@ final class CreateUserService
         }
 
         /** @todo Avoid "limbo" object by extracting a PasswordHasher service wrapper */
-        $hashedPassword = $this->passwordHasher->hashPassword(new User('', '', '', ''), $input->password);
+        $hashedPassword = $this->passwordHasher->hashPassword(new User('', '', '', '', UserRole::Worker), $input->password);
 
         $user = User::create($input, $hashedPassword);
 

@@ -10,22 +10,34 @@ use App\Exception\DuplicateResourceException;
 use App\Exception\OldPasswordMismatchException;
 use App\Service\User\ChangeUserPasswordService;
 use App\Service\User\CreateUserService;
+use App\Service\User\DeleteUserService;
+use App\Service\User\ListUserService;
 use App\Service\User\UpdateUserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/users')]
+#[IsGranted('ROLE_WORKER')]
 final class UserController extends AbstractController
 {
     public function __construct(
         private readonly CreateUserService $createUserService,
         private readonly UpdateUserService $updateUserService,
         private readonly ChangeUserPasswordService $changeUserPasswordService,
+        private readonly ListUserService $listUserService,
+        private readonly DeleteUserService $deleteUserService
     ) {}
 
+    public function index(): JsonResponse
+    {
+        return $this->json($this->listUserService->execute(), JsonResponse::HTTP_OK);
+    }
+
     #[Route('', methods: ['POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function create(
         #[MapRequestPayload] CreateUserInput $input,
     ): JsonResponse
@@ -62,6 +74,16 @@ final class UserController extends AbstractController
             return $this->json(['error' => $e->getMessage()], JsonResponse::HTTP_UNAUTHORIZED);
         }
 
+        return $this->json(null, JsonResponse::HTTP_NO_CONTENT);
+    }
+    
+    #[Route('/{id}', methods: ['DELETE'])]
+    #[IsGranted('ROLE_ADMIN')]
+    public function delete(
+        User $user
+    ): JsonResponse
+    {
+        $this->deleteUserService->execute($user);
         return $this->json(null, JsonResponse::HTTP_NO_CONTENT);
     }
 }
