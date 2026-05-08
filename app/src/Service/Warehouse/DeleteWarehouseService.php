@@ -9,7 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 final class DeleteWarehouseService
 {
     public function __construct(
-        private readonly EntityManagerInterface $entityManagerInterface
+        private readonly EntityManagerInterface $entityManager
     ) {}
 
     public function execute(Warehouse $warehouse): void
@@ -18,7 +18,7 @@ final class DeleteWarehouseService
             throw ResourceInUseException::forEntity('Warehouse', 'ProductMovement');
         }
     
-        $this->entityManagerInterface->remove($warehouse);
-        $this->entityManagerInterface->flush();
+        $this->entityManager->remove($warehouse);
+        $this->entityManager->flush();
     }
 }

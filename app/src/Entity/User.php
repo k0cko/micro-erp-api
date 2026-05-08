@@ -8,7 +8,6 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use HashContext;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -46,10 +45,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $lastName = null;
 
     /**
-     * @var Collection<int, Inquiry>
+     * @var Collection<int, PurchaseOrder>
      */
-    #[ORM\OneToMany(targetEntity: Inquiry::class, mappedBy: 'user')]
-    private Collection $inquiries;
+    #[ORM\OneToMany(targetEntity: PurchaseOrder::class, mappedBy: 'user')]
+    private Collection $purchaseOrders;
+
+    /**
+     * @var Collection<int, Delivery>
+     */
+    #[ORM\OneToMany(targetEntity: Delivery::class, mappedBy: 'user')]
+    private Collection $deliveries;
 
     public function __construct(string $username, string $password, string $firstName, string $lastName)
     {
@@ -57,7 +62,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->password = $password;
         $this->firstName = $firstName;
         $this->lastName = $lastName;
-        $this->inquiries = new ArrayCollection();
+        $this->purchaseOrders = new ArrayCollection();
+        $this->deliveries = new ArrayCollection();
     }
 
     public static function create(CreateUserInput $input, string $hashedPassword): self
@@ -176,32 +182,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<int, Inquiry>
+     * @return Collection<int, PurchaseOrder>
      */
-    public function getInquiries(): Collection
+    public function getPurchaseOrders(): Collection
     {
-        return $this->inquiries;
+        return $this->purchaseOrders;
     }
 
-    public function addInquiry(Inquiry $inquiry): static
+    /**
+     * @return Collection<int, Delivery>
+     */
+    public function getDeliveries(): Collection
     {
-        if (!$this->inquiries->contains($inquiry)) {
-            $this->inquiries->add($inquiry);
-            $inquiry->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeInquiry(Inquiry $inquiry): static
-    {
-        if ($this->inquiries->removeElement($inquiry)) {
-            // set the owning side to null (unless already changed)
-            if ($inquiry->getUser() === $this) {
-                $inquiry->setUser(null);
-            }
-        }
-
-        return $this;
+        return $this->deliveries;
     }
 }

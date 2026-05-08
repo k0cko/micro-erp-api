@@ -11,7 +11,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 final class ChangeUserPasswordService
 {
     public function __construct(
-        private readonly EntityManagerInterface $entityManagerInterface,
+        private readonly EntityManagerInterface $entityManager,
         private readonly UserPasswordHasherInterface $passwordHasherInterface
     ) {}
 
@@ -24,6 +24,6 @@ final class ChangeUserPasswordService
         $hashedPassword = $this->passwordHasherInterface->hashPassword($user, $input->newPassword);
         $user->changePassword($hashedPassword);
 
-        $this->entityManagerInterface->flush();
+        $this->entityManager->flush();
     }
 }

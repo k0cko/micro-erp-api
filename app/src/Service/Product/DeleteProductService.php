@@ -9,7 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 final class DeleteProductService
 {
     public function __construct(
-        private readonly EntityManagerInterface $entityManagerInterface
+        private readonly EntityManagerInterface $entityManager
     ) {}
 
     public function execute(Product $product): void
@@ -18,7 +18,7 @@ final class DeleteProductService
             throw ResourceInUseException::forEntity('Product', 'ProductMovement');
         }
     
-        $this->entityManagerInterface->remove($product);
-        $this->entityManagerInterface->flush();
+        $this->entityManager->remove($product);
+        $this->entityManager->flush();
     }
 }

@@ -23,7 +23,7 @@ class PurchaseOrderProduct extends InquiryProduct
     /**
      * @var Collection<int, ProductMovement>
      */
-    #[ORM\OneToMany(targetEntity: ProductMovement::class, mappedBy: 'purchase_order_product')]
+    #[ORM\OneToMany(targetEntity: ProductMovement::class, mappedBy: 'purchaseOrderProduct')]
     private Collection $productMovements;
 
     public function __construct()

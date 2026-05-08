@@ -14,7 +14,7 @@ final class CreateUserService
 {
     public function __construct(
         private readonly UserRepository $userRepository,
-        private readonly EntityManagerInterface $entityManagerInterface,
+        private readonly EntityManagerInterface $entityManager,
         private readonly UserPasswordHasherInterface $passwordHasher,
     ) {}
 
@@ -24,12 +24,13 @@ final class CreateUserService
             throw DuplicateResourceException::forField('User', 'username', $input->username);
         }
 
+        /** @todo Avoid "limbo" object by extracting a PasswordHasher service wrapper */
         $hashedPassword = $this->passwordHasher->hashPassword(new User('', '', '', ''), $input->password);
 
         $user = User::create($input, $hashedPassword);
 
-        $this->entityManagerInterface->persist($user);
-        $this->entityManagerInterface->flush();
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
 
         return $user->getId();
     }

@@ -9,7 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 final class DeleteContractorService
 {
     public function __construct(
-        private readonly EntityManagerInterface $entityManagerInterface
+        private readonly EntityManagerInterface $entityManager
     ) {}
 
     public function execute(Contractor $contractor): void
@@ -18,7 +18,7 @@ final class DeleteContractorService
             throw ResourceInUseException::forEntity('Contractor', 'Deliveries or Order');
         }
 
-        $this->entityManagerInterface->remove($contractor);
-        $this->entityManagerInterface->flush();
+        $this->entityManager->remove($contractor);
+        $this->entityManager->flush();
     }
 }

@@ -12,7 +12,7 @@ final class CreateContractorService
 {
     public function __construct(
         private readonly ContractorRepository $contractorRepository,
-        private readonly EntityManagerInterface $entityManagerInterface,
+        private readonly EntityManagerInterface $entityManager,
     ) {}
 
     public function execute(ContractorInput $input): int
@@ -23,8 +23,8 @@ final class CreateContractorService
 
         $contractor = Contractor::create($input);
 
-        $this->entityManagerInterface->persist($contractor);
-        $this->entityManagerInterface->flush();
+        $this->entityManager->persist($contractor);
+        $this->entityManager->flush();
 
         return $contractor->getId();
     }

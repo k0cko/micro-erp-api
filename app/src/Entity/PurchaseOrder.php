@@ -17,10 +17,22 @@ class PurchaseOrder extends Inquiry
     #[ORM\Column]
     private ?int $id = null;
 
+    #[ORM\ManyToOne(inversedBy: 'purchaseOrders')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Contractor $contractor = null;
+
+    #[ORM\ManyToOne(inversedBy: 'purchaseOrders')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
+
+    #[ORM\ManyToOne(inversedBy: 'purchaseOrders')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Warehouse $warehouse = null;
+
     /**
      * @var Collection<int, PurchaseOrderProduct>
      */
-    #[ORM\OneToMany(targetEntity: PurchaseOrderProduct::class, mappedBy: 'purchase_order')]
+    #[ORM\OneToMany(targetEntity: PurchaseOrderProduct::class, mappedBy: 'purchaseOrder')]
     private Collection $purchaseOrderProducts;
 
     public function __construct()
@@ -59,6 +71,42 @@ class PurchaseOrder extends Inquiry
                 $purchaseOrderProduct->setPurchaseOrder(null);
             }
         }
+
+        return $this;
+    }
+
+        public function getContractor(): ?Contractor
+    {
+        return $this->contractor;
+    }
+
+    public function setContractor(?Contractor $contractor): static
+    {
+        $this->contractor = $contractor;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getWarehouse(): ?Warehouse
+    {
+        return $this->warehouse;
+    }
+
+    public function setWarehouse(?Warehouse $warehouse): static
+    {
+        $this->warehouse = $warehouse;
 
         return $this;
     }

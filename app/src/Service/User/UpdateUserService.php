@@ -12,14 +12,14 @@ final class UpdateUserService
 {
     public function __construct(
         private readonly UserResponseMapper $userResponseMapper,
-        private readonly EntityManagerInterface $entityManagerInterface,
+        private readonly EntityManagerInterface $entityManager,
     ) {}
 
     public function execute(User $user, UpdateUserInput $input): UserResponse
     {
         $user->update($input->firstName, $input->lastName);
 
-        $this->entityManagerInterface->flush();
+        $this->entityManager->flush();
 
         return $this->userResponseMapper->mapToResponse($user);
     }

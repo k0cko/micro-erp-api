@@ -17,18 +17,6 @@ abstract class Inquiry
     #[ORM\Column]
     private ?int $number = null;
 
-    #[ORM\ManyToOne(inversedBy: 'inquiries')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Contractor $contractor = null;
-
-    #[ORM\ManyToOne(inversedBy: 'inquiries')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Warehouse $warehouse = null;
-
-    #[ORM\ManyToOne(inversedBy: 'inquiries')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?User $user = null;
-
     #[ORM\Column(enumType: InquiryStatus::class)]
     private ?InquiryStatus $status = null;
 
@@ -52,42 +40,6 @@ abstract class Inquiry
     public function setNumber(int $number): static
     {
         $this->number = $number;
-
-        return $this;
-    }
-
-    public function getContractor(): ?Contractor
-    {
-        return $this->contractor;
-    }
-
-    public function setContractor(?Contractor $contractor): static
-    {
-        $this->contractor = $contractor;
-
-        return $this;
-    }
-
-    public function getWarehouse(): ?Warehouse
-    {
-        return $this->warehouse;
-    }
-
-    public function setWarehouse(?Warehouse $warehouse): static
-    {
-        $this->warehouse = $warehouse;
-
-        return $this;
-    }
-
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): static
-    {
-        $this->user = $user;
 
         return $this;
     }

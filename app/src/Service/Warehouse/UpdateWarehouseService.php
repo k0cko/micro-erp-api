@@ -19,19 +19,19 @@ final class UpdateWarehouseService
 {
     public function __construct(
         private readonly WarehouseRepository $warehouseRepository,
-        private readonly EntityManagerInterface $entityManagerInterface,
+        private readonly EntityManagerInterface $entityManager,
         private readonly WarehouseResponseMapper $warehouseResponseMapper
     ) {}
 
     public function execute(WarehouseInput $input, Warehouse $warehouse): WarehouseResponse
     {
         if ($this->warehouseRepository->existsByName($input->name, $warehouse->getId())) {
-            throw DuplicateResourceException::forField('Warehouse', 'warehouse', $input->name);
+            throw DuplicateResourceException::forField('Warehouse', 'name', $input->name);
         }
 
         $warehouse->update($input->name);
 
-        $this->entityManagerInterface->flush();
+        $this->entityManager->flush();
 
         return $this->warehouseResponseMapper->mapToResponse($warehouse);
     }

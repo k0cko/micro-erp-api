@@ -23,10 +23,16 @@ class Warehouse
     private ?string $name = null;
 
     /**
-     * @var Collection<int, Inquiry>
+     * @var Collection<int, PurchaseOrder>
      */
-    #[ORM\OneToMany(targetEntity: Inquiry::class, mappedBy: 'warehouse')]
-    private Collection $inquiries;
+    #[ORM\OneToMany(targetEntity: PurchaseOrder::class, mappedBy: 'warehouse')]
+    private Collection $purchaseOrders;
+
+    /**
+     * @var Collection<int, Delivery>
+     */
+    #[ORM\OneToMany(targetEntity: Delivery::class, mappedBy: 'warehouse')]
+    private Collection $deliveries;
 
     /**
      * @var Collection<int, WarehouseProduct>
@@ -43,7 +49,8 @@ class Warehouse
     public function __construct(string $name)
     {
         $this->name = $name;
-        $this->inquiries = new ArrayCollection();
+        $this->purchaseOrders = new ArrayCollection();
+        $this->deliveries = new ArrayCollection();
         $this->warehouseProducts = new ArrayCollection();
         $this->productMovements = new ArrayCollection();
     }
@@ -76,28 +83,19 @@ class Warehouse
     }
 
     /**
-     * @return Collection<int, Inquiry>
+     * @return Collection<int, PurchaseOrder>
      */
-    public function getInquiries(): Collection
+    public function getPurchaseOrders(): Collection
     {
-        return $this->inquiries;
+        return $this->purchaseOrders;
     }
 
-    public function addInquiry(Inquiry $inquiry): static
+    /**
+     * @return Collection<int, Delivery>
+     */
+    public function getDeliveries(): Collection
     {
-        if (!$this->inquiries->contains($inquiry)) {
-            $this->inquiries->add($inquiry);
-            $inquiry->setWarehouse($this);
-        }
-
-        return $this;
-    }
-
-    public function removeInquiry(Inquiry $inquiry): static
-    {
-        $this->inquiries->removeElement($inquiry);
-
-        return $this;
+        return $this->deliveries;
     }
 
     /**

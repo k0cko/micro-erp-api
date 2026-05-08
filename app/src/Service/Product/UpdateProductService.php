@@ -14,7 +14,7 @@ final class UpdateProductService
 {
     public function __construct(
         private readonly ProductRepository $productRepository,
-        private readonly EntityManagerInterface $entityManagerInterface,
+        private readonly EntityManagerInterface $entityManager,
         private readonly ProductResponseMapper $productResponseMapper
     ) {}
 
@@ -26,7 +26,7 @@ final class UpdateProductService
 
         $product->update($input->name, $input->description);
 
-        $this->entityManagerInterface->flush();
+        $this->entityManager->flush();
 
         return $this->productResponseMapper->mapToResponse($product);
     }

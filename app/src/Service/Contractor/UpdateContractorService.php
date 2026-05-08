@@ -15,7 +15,7 @@ final class UpdateContractorService
 {
     public function __construct(
         private readonly ContractorRepository $contractorRepository,
-        private readonly EntityManagerInterface $entityManagerInterface,
+        private readonly EntityManagerInterface $entityManager,
         private readonly ContractorResponseMapper $contractorResponseMapper
     ) {}
 
@@ -27,7 +27,7 @@ final class UpdateContractorService
 
         $contractor->update($input->name, ContractorType::from($input->type));
 
-        $this->entityManagerInterface->flush();
+        $this->entityManager->flush();
 
         return $this->contractorResponseMapper->mapToResponse($contractor);
     }
