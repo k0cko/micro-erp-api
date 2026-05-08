@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Trait\SoftDeletableTrait;
 use App\Entity\Trait\TimestampableTrait;
 use App\Repository\WarehouseRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -13,6 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Warehouse
 {
     use TimestampableTrait;
+    use SoftDeletableTrait;
     
     #[ORM\Id]
     #[ORM\GeneratedValue]

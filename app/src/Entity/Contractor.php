@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\DTO\Contractor\ContractorInput;
+use App\Entity\Trait\SoftDeletableTrait;
 use App\Entity\Trait\TimestampableTrait;
 use App\Enum\ContractorType;
 use App\Repository\ContractorRepository;
@@ -15,6 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Contractor
 {
     use TimestampableTrait;
+    use SoftDeletableTrait;
     
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -75,7 +77,7 @@ class Contractor
         return $this;
     }
 
-    public function getType(): ?ContractorType
+    public function getType(): ContractorType
     {
         return $this->type;
     }

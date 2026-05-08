@@ -3,7 +3,6 @@
 namespace App\Service\Contractor;
 
 use App\Entity\Contractor;
-use App\Exception\ResourceInUseException;
 use Doctrine\ORM\EntityManagerInterface;
 
 final class DeleteContractorService
@@ -14,11 +13,7 @@ final class DeleteContractorService
 
     public function execute(Contractor $contractor): void
     {
-        if (!$contractor->getPurchaseOrders()->isEmpty() || !$contractor->getDeliveries()->isEmpty()) {
-            throw ResourceInUseException::forEntity('Contractor', 'Deliveries or Order');
-        }
-
-        $this->entityManager->remove($contractor);
+        $contractor->softDelete();
         $this->entityManager->flush();
     }
 }

@@ -3,7 +3,9 @@
 namespace App\Entity;
 
 use App\DTO\User\CreateUserInput;
+use App\Entity\Trait\SoftDeletableTrait;
 use App\Entity\Trait\TimestampableTrait;
+use App\Enum\UserRole;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -17,6 +19,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     use TimestampableTrait;
+    use SoftDeletableTrait;
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -26,11 +29,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 180)]
     private ?string $username = null;
 
-    /**
-     * @var list<string> The user roles
-     */
-    #[ORM\Column]
-    private array $roles = [];
+    #[ORM\Column(enumType: UserRole::class)]
+    private ?UserRole $role = null;
 
     /**
      * @var string The hashed password
@@ -56,19 +56,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Delivery::class, mappedBy: 'user')]
     private Collection $deliveries;
 
-    public function __construct(string $username, string $password, string $firstName, string $lastName)
+    public function __construct(string $username, string $password, string $firstName, string $lastName, UserRole $role)
     {
         $this->username = $username;
         $this->password = $password;
         $this->firstName = $firstName;
         $this->lastName = $lastName;
+        $this->role = $role;
         $this->purchaseOrders = new ArrayCollection();
         $this->deliveries = new ArrayCollection();
     }
 
     public static function create(CreateUserInput $input, string $hashedPassword): self
     {
-        return new self($input->username, $hashedPassword, $input->firstName, $input->lastName);
+        return new self($input->username, $hashedPassword, $input->firstName, $input->lastName, UserRole::from($input->role));
     }
 
     public function update(string $firstName, string $lastName): void
@@ -114,21 +115,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getRoles(): array
     {
-        $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
-
-        return array_unique($roles);
+        return match($this->role) {
+            UserRole::Admin => ['ROLE_ADMIN', 'ROLE_USER'],
+            UserRole::Worker => ['ROLE_WORKER', 'ROLE_USER'],
+        };
     }
 
-    /**
-     * @param list<string> $roles
-     */
-    public function setRoles(array $roles): static
+    public function getRole(): UserRole
     {
-        $this->roles = $roles;
-
-        return $this;
+        return $this->role;
     }
 
     /**
