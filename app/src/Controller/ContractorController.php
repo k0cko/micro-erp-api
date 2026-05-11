@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\DTO\Contractor\ContractorInput;
 use App\Entity\Contractor;
 use App\Exception\DuplicateResourceException;
-use App\Exception\ResourceInUseException;
 use App\Service\Contractor\CreateContractorService;
 use App\Service\Contractor\DeleteContractorService;
 use App\Service\Contractor\ListContractorService;
@@ -54,7 +53,7 @@ final class ContractorController extends AbstractController
     ): JsonResponse
     {
         try {
-            $contractorResponse = $this->updateContractorService->execute($contractor, $input); 
+            $contractorResponse = $this->updateContractorService->execute($contractor, $input);
         } catch (DuplicateResourceException $e) {
             return $this->json(['error' => $e->getMessage()], JsonResponse::HTTP_CONFLICT);
         }

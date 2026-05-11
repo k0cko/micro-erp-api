@@ -22,4 +22,7 @@ COPY app/ .
 
 COPY --from=build /app/vendor/ vendor/
 
-CMD ["php-fpm"]
+COPY docker/php/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+ENTRYPOINT [ "/entrypoint.sh" ]
