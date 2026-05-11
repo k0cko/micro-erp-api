@@ -2,16 +2,11 @@
 
 namespace App\Service\Warehouse;
 
-use App\DTO\Product\ProductInput;
-use App\DTO\Product\ProductResponse;
 use App\DTO\Warehouse\WarehouseInput;
 use App\DTO\Warehouse\WarehouseResponse;
-use App\Entity\Product;
 use App\Entity\Warehouse;
 use App\Exception\DuplicateResourceException;
-use App\Mapper\Product\ProductResponseMapper;
 use App\Mapper\Warehouse\WarehouseResponseMapper;
-use App\Repository\ProductRepository;
 use App\Repository\WarehouseRepository;
 use Doctrine\ORM\EntityManagerInterface;
 

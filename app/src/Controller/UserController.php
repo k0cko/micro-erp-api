@@ -31,6 +31,7 @@ final class UserController extends AbstractController
         private readonly DeleteUserService $deleteUserService
     ) {}
 
+    #[Route('', methods: ['GET'])]
     public function index(): JsonResponse
     {
         return $this->json($this->listUserService->execute(), JsonResponse::HTTP_OK);

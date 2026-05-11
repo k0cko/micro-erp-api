@@ -2,8 +2,6 @@
 
 namespace App\DTO\User;
 
-use App\Enum\UserRole;
-
 final readonly class UserResponse
 {
     public function __construct(

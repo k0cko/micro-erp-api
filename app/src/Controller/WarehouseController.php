@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\DTO\Warehouse\WarehouseInput;
 use App\Entity\Warehouse;
 use App\Exception\DuplicateResourceException;
-use App\Exception\ResourceInUseException;
 use App\Service\Warehouse\CreateWarehouseService;
 use App\Service\Warehouse\ListWarehouseService;
 use App\Service\Warehouse\UpdateWarehouseService;
