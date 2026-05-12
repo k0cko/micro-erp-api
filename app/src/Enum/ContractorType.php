@@ -2,21 +2,12 @@
 
 namespace App\Enum;
 
-enum ContractorType: string {
+use App\Enum\Trait\EnumTrait;
+
+enum ContractorType: string
+{
+    use EnumTrait;
+
     case Client = 'client';
     case Supplier = 'supplier';
-
-    public static function values(): array
-    {
-        return array_column(self::cases(), 'value');
-    }
-
-    public function label(): string
-    {
-        return match($this)
-        {
-            self::Client => 'Client',
-            self::Supplier => 'Supplier',
-        };
-    }
 }

@@ -18,9 +18,6 @@ abstract class InquiryProduct
     #[ORM\Column]
     private ?int $quantity = null;
 
-    #[ORM\Column(enumType: InquiryProductStatus::class)]
-    private ?InquiryProductStatus $status = null;
-
     public function getProduct(): ?Product
     {
         return $this->product;
@@ -41,18 +38,6 @@ abstract class InquiryProduct
     public function setQuantity(int $quantity): static
     {
         $this->quantity = $quantity;
-
-        return $this;
-    }
-
-    public function getStatus(): ?InquiryProductStatus
-    {
-        return $this->status;
-    }
-
-    public function setStatus(InquiryProductStatus $status): static
-    {
-        $this->status = $status;
 
         return $this;
     }

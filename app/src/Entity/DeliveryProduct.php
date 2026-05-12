@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\DeliveryProductStatus;
 use App\Repository\DeliveryProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -19,6 +20,9 @@ class DeliveryProduct extends InquiryProduct
     #[ORM\ManyToOne(inversedBy: 'deliveryProducts')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Delivery $delivery = null;
+
+    #[ORM\Column(enumType: DeliveryProductStatus::class)]
+    private ?DeliveryProductStatus $status = null;
 
     /**
      * @var Collection<int, ProductMovement>
@@ -74,6 +78,18 @@ class DeliveryProduct extends InquiryProduct
                 $productMovement->setDeliveryProduct(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getStatus(): DeliveryProductStatus
+    {
+        return $this->status;
+    }
+
+    public function setStatus(DeliveryProductStatus $status): static
+    {
+        $this->status = $status;
 
         return $this;
     }

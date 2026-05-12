@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\PurchaseOrderProductStatus;
 use App\Repository\PurchaseOrderProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -19,6 +20,9 @@ class PurchaseOrderProduct extends InquiryProduct
     #[ORM\ManyToOne(inversedBy: 'purchaseOrderProducts')]
     #[ORM\JoinColumn(nullable: false)]
     private ?PurchaseOrder $purchaseOrder = null;
+
+    #[ORM\Column(enumType: PurchaseOrderProductStatus::class)]
+    private ?PurchaseOrderProductStatus $status = null;
 
     /**
      * @var Collection<int, ProductMovement>
@@ -74,6 +78,18 @@ class PurchaseOrderProduct extends InquiryProduct
                 $productMovement->setPurchaseOrderProduct(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getStatus(): PurchaseOrderProductStatus
+    {
+        return $this->status;
+    }
+
+    public function setStatus(PurchaseOrderProductStatus $status): static
+    {
+        $this->status = $status;
 
         return $this;
     }

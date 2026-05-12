@@ -2,7 +2,12 @@
 
 namespace App\Enum;
 
-enum ProductMovementType: string {
-    case In = 'In';
-    case Out = 'Out';
+use App\Enum\Trait\EnumTrait;
+
+enum ProductMovementType: string
+{
+    use EnumTrait;
+
+    case In = 'in';
+    case Out = 'out';
 }

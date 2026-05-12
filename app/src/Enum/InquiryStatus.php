@@ -2,9 +2,14 @@
 
 namespace App\Enum;
 
-enum InquiryStatus: string {
-    case Draft = 'Draft';
-    case In_progress = 'In progress';
-    case Completed = 'Completed';
-    case Cancelled = 'Cancelled';
+use App\Enum\Trait\EnumTrait;
+
+enum InquiryStatus: string
+{
+    use EnumTrait;
+
+    case Draft = 'draft';
+    case In_progress = 'in_progress';
+    case Completed = 'completed';
+    case Cancelled = 'cancelled';
 }
