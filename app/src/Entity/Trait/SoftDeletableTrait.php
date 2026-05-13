@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 trait SoftDeletableTrait
 {
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $deletedAt = null;
 
     public function getDeletedAt(): \DateTimeImmutable

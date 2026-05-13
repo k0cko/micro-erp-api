@@ -12,13 +12,10 @@ abstract class Inquiry
     use TimestampableTrait;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $date = null;
-
-    #[ORM\Column]
-    private ?int $number = null;
+    protected ?\DateTimeImmutable $date = null;
 
     #[ORM\Column(enumType: InquiryStatus::class)]
-    private ?InquiryStatus $status = null;
+    protected ?InquiryStatus $status = null;
 
     public function getDate(): ?\DateTimeImmutable
     {
@@ -32,19 +29,7 @@ abstract class Inquiry
         return $this;
     }
 
-    public function getNumber(): ?int
-    {
-        return $this->number;
-    }
-
-    public function setNumber(int $number): static
-    {
-        $this->number = $number;
-
-        return $this;
-    }
-
-    public function getStatus(): ?InquiryStatus
+    public function getStatus(): InquiryStatus
     {
         return $this->status;
     }

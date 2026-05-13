@@ -1,0 +1,22 @@
+<?php
+
+namespace App\Mapper\Delivery;
+
+use App\DTO\Delivery\DeliveryResponse;
+use App\Entity\Delivery;
+
+final class DeliveryResponseMapper
+{
+    public static function map(Delivery $delivery): DeliveryResponse
+    {
+        return new DeliveryResponse(
+            number: sprintf('%06d', $delivery->getId()),
+            status: $delivery->getStatus()->label(),
+            contractor: $delivery->getContractor()->getName(),
+            warehouse: $delivery->getWarehouse()->getName(),
+            date: $delivery->getDate(),
+            createdAt: $delivery->getCreatedAt(),
+            updatedAt: $delivery->getUpdatedAt(),
+        );
+    }
+}

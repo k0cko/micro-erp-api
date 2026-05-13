@@ -19,8 +19,6 @@ class Product
     #[ORM\Column]
     private ?int $id = null;
 
-    
-    /** Unique case-insensitively. See migration Version20260504084413. */
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 

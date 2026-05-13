@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\DTO\Delivery\DeliveryInput;
+use App\Enum\InquiryStatus;
 use App\Repository\DeliveryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -34,9 +36,37 @@ class Delivery extends Inquiry
     #[ORM\OneToMany(targetEntity: DeliveryProduct::class, mappedBy: 'delivery')]
     private Collection $deliveryProducts;
 
-    public function __construct()
-    {
+    public function __construct(
+        \DateTimeImmutable $date,
+        InquiryStatus $status,
+        Contractor $contractor,
+        User $user,
+        Warehouse $warehouse
+    ) {
+        $this->date = $date;
+        $this->status = $status;
+        $this->contractor = $contractor;
+        $this->user = $user;
+        $this->warehouse = $warehouse;
         $this->deliveryProducts = new ArrayCollection();
+    }
+
+    public static function create(DeliveryInput $input, User $user, Contractor $contractor, Warehouse $warehouse): self
+    {
+        return new self(
+            $input->date,
+            InquiryStatus::Draft,
+            $contractor,
+            $user,
+            $warehouse
+        );
+    }
+
+    public function update(DeliveryInput $input, Contractor $contractor, Warehouse $warehouse): void
+    {
+        $this->date = $input->date;
+        $this->contractor = $contractor;
+        $this->warehouse = $warehouse;
     }
 
     public function getId(): ?int
@@ -74,7 +104,7 @@ class Delivery extends Inquiry
         return $this;
     }
 
-        public function getContractor(): ?Contractor
+    public function getContractor(): ?Contractor
     {
         return $this->contractor;
     }
