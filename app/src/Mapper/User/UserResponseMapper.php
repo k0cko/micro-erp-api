@@ -8,7 +8,7 @@ use App\Enum\UserRole;
 
 final readonly class UserResponseMapper
 {
-    public function mapToResponse(User $user): UserResponse
+    public static function mapToResponse(User $user): UserResponse
     {
         return new UserResponse(
             username: $user->getUsername(),

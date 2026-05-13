@@ -11,7 +11,6 @@ use Doctrine\ORM\EntityManagerInterface;
 final class UpdateUserService
 {
     public function __construct(
-        private readonly UserResponseMapper $userResponseMapper,
         private readonly EntityManagerInterface $entityManager,
     ) {}
 
@@ -21,6 +20,6 @@ final class UpdateUserService
 
         $this->entityManager->flush();
 
-        return $this->userResponseMapper->mapToResponse($user);
+        return UserResponseMapper::mapToResponse($user);
     }
 }

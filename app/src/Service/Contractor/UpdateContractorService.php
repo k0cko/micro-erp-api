@@ -16,7 +16,6 @@ final class UpdateContractorService
     public function __construct(
         private readonly ContractorRepository $contractorRepository,
         private readonly EntityManagerInterface $entityManager,
-        private readonly ContractorResponseMapper $contractorResponseMapper
     ) {}
 
     public function execute(Contractor $contractor, ContractorInput $input): ContractorResponse
@@ -29,6 +28,6 @@ final class UpdateContractorService
 
         $this->entityManager->flush();
 
-        return $this->contractorResponseMapper->mapToResponse($contractor);
+        return ContractorResponseMapper::mapToResponse($contractor);
     }
 }

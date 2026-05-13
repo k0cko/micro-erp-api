@@ -15,7 +15,6 @@ final class UpdateProductService
     public function __construct(
         private readonly ProductRepository $productRepository,
         private readonly EntityManagerInterface $entityManager,
-        private readonly ProductResponseMapper $productResponseMapper
     ) {}
 
     public function execute(ProductInput $input, Product $product): ProductResponse
@@ -28,6 +27,6 @@ final class UpdateProductService
 
         $this->entityManager->flush();
 
-        return $this->productResponseMapper->mapToResponse($product);
+        return ProductResponseMapper::mapToResponse($product);
     }
 }

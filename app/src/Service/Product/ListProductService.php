@@ -10,7 +10,6 @@ final class ListProductService
 {
     public function __construct(
         private readonly ProductRepository $productRepository,
-        private readonly ProductResponseMapper $productResponseMapper,
     ) {}
 
     /** @return ProductResponse[] */
@@ -18,7 +17,7 @@ final class ListProductService
     {
         $productResponses = [];
         foreach ($this->productRepository->findAll() as $product) {
-            $productResponses[] = $this->productResponseMapper->mapToResponse($product);
+            $productResponses[] = ProductResponseMapper::mapToResponse($product);
         }
 
         return $productResponses;

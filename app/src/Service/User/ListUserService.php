@@ -10,7 +10,6 @@ final class ListUserService
 {
     public function __construct(
         private readonly UserRepository $userRepository,
-        private readonly UserResponseMapper $userResponseMapper
     ) {}
 
     /** @return User[] */
@@ -18,7 +17,7 @@ final class ListUserService
     {
         $users = [];
         foreach ($this->userRepository->findAll() as $user) {
-            $users[] = $this->userResponseMapper->mapToResponse($user);
+            $users[] = UserResponseMapper::mapToResponse($user);
         }
 
         return $users; 

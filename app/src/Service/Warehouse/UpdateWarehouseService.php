@@ -15,7 +15,6 @@ final class UpdateWarehouseService
     public function __construct(
         private readonly WarehouseRepository $warehouseRepository,
         private readonly EntityManagerInterface $entityManager,
-        private readonly WarehouseResponseMapper $warehouseResponseMapper
     ) {}
 
     public function execute(WarehouseInput $input, Warehouse $warehouse): WarehouseResponse
@@ -28,6 +27,6 @@ final class UpdateWarehouseService
 
         $this->entityManager->flush();
 
-        return $this->warehouseResponseMapper->mapToResponse($warehouse);
+        return WarehouseResponseMapper::mapToResponse($warehouse);
     }
 }

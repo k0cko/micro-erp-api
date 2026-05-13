@@ -10,7 +10,6 @@ final class ListContractorService
 {
     public function __construct(
         private readonly ContractorRepository $contractorRepository,
-        private readonly ContractorResponseMapper $contractorResponseMapper,
     ) {}
 
     /** @return ContractorResponse[] */
@@ -18,7 +17,7 @@ final class ListContractorService
     {
         $contractorResponses = [];
         foreach ($this->contractorRepository->findAll() as $contractor) {
-            $contractorResponses[] = $this->contractorResponseMapper->mapToResponse($contractor);
+            $contractorResponses[] = ContractorResponseMapper::mapToResponse($contractor);
         }
 
         return $contractorResponses;

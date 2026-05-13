@@ -5,7 +5,7 @@ namespace App\Mapper\Delivery;
 use App\DTO\Delivery\DeliveryResponse;
 use App\Entity\Delivery;
 
-final class DeliveryResponseMapper
+final readonly class DeliveryResponseMapper
 {
     public static function map(Delivery $delivery): DeliveryResponse
     {

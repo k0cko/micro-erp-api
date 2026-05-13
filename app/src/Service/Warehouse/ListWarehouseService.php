@@ -10,7 +10,6 @@ final class ListWarehouseService
 {
     public function __construct(
         private readonly WarehouseRepository $warehouseRepository,
-        private readonly WarehouseResponseMapper $warehouseResponseMapper,
     ) {}
 
     /** @return WarehouseResponse[] */
@@ -18,7 +17,7 @@ final class ListWarehouseService
     {
         $warehouseResponses = [];
         foreach ($this->warehouseRepository->findAll() as $warehouse) {
-            $warehouseResponses[] = $this->warehouseResponseMapper->mapToResponse($warehouse);
+            $warehouseResponses[] = WarehouseResponseMapper::mapToResponse($warehouse);
         }
 
         return $warehouseResponses;
