@@ -8,6 +8,7 @@ use App\DTO\User\UpdateUserInput;
 use App\Entity\User;
 use App\Exception\DuplicateResourceException;
 use App\Exception\OldPasswordMismatchException;
+use App\Security\Voter\UserVoter;
 use App\Service\User\ChangeUserPasswordService;
 use App\Service\User\CreateUserService;
 use App\Service\User\DeleteUserService;
@@ -44,6 +45,8 @@ final class UserController extends AbstractController
         #[MapRequestPayload] CreateUserInput $input,
     ): JsonResponse
     {
+        $this->denyAccessUnlessGranted(UserVoter::CREATE_SUPER_ADMIN, $input);
+
         try {
             $id = $this->createUserService->execute($input);
         } catch (DuplicateResourceException $e) {
@@ -80,7 +83,7 @@ final class UserController extends AbstractController
     }
     
     #[Route('/{id}', methods: ['DELETE'])]
-    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted('ROLE_SUPER_ADMIN')]
     public function delete(
         User $user
     ): JsonResponse

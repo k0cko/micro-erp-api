@@ -8,6 +8,7 @@ enum UserRole: string
 {
     use EnumTrait;
 
+    case SuperAdmin = 'super_admin';
     case Admin = 'admin';
     case Worker = 'worker';
 }

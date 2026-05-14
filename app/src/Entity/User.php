@@ -116,6 +116,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getRoles(): array
     {
         return match($this->role) {
+            UserRole::SuperAdmin => ['ROLE_SUPER_ADMIN', 'ROLE_ADMIN', 'ROLE_WORKER', 'ROLE_USER'],
             UserRole::Admin => ['ROLE_ADMIN', 'ROLE_USER'],
             UserRole::Worker => ['ROLE_WORKER', 'ROLE_USER'],
         };

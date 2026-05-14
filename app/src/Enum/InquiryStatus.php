@@ -9,7 +9,7 @@ enum InquiryStatus: string
     use EnumTrait;
 
     case Draft = 'draft';
-    case In_progress = 'in_progress';
+    case InProgress = 'in_progress';
     case Completed = 'completed';
     case Cancelled = 'cancelled';
 }
