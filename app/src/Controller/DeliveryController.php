@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\DTO\Delivery\DeliveryInput;
 use App\Entity\Delivery;
+use App\Entity\User;
 use App\Exception\InvalidStatusException;
 use App\Service\Delivery\CreateDeliveryService;
 use App\Service\Delivery\DeleteDeliveryService;
@@ -13,6 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/deliveries')]
@@ -34,9 +36,10 @@ class DeliveryController extends AbstractController
 
     #[Route('', methods: ['POST'])]
     public function create(
-        #[MapRequestPayload] DeliveryInput $input
+        #[MapRequestPayload] DeliveryInput $input,
+        #[CurrentUser] User $user
     ): JsonResponse {
-        $id = $this->createDeliveryService->execute($input);
+        $id = $this->createDeliveryService->execute($input, $user);
 
         return $this->json(['id' => $id], JsonResponse::HTTP_CREATED);
     }

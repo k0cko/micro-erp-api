@@ -17,6 +17,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/users')]
@@ -52,9 +53,9 @@ final class UserController extends AbstractController
         return $this->json(['id' => $id], JsonResponse::HTTP_CREATED);
     }
 
-    #[Route('/{id}', methods: ['PUT'])] // TODO: Update route to not use id, but rather use $this->getUser() in order to prevent IDOR vulnerability. /me
+    #[Route('/{id}', methods: ['PUT'])]
     public function update(
-        User $user,
+        #[CurrentUser] User $user,
         #[MapRequestPayload] UpdateUserInput $input
     ): JsonResponse
     {
@@ -63,9 +64,9 @@ final class UserController extends AbstractController
         return $this->json($userResponse, JsonResponse::HTTP_OK);
     }
 
-    #[Route('/{id}/change-password', methods: ['PUT'])] // TODO: Update route to not use id, but rather use $this->getUser() in order to prevent IDOR vulnerability. /change-password
+    #[Route('/change-password', methods: ['PUT'])]
     public function changePassword(
-        User $user,
+        #[CurrentUser] User $user,
         #[MapRequestPayload] ChangeUserPasswordInput $input
     ): JsonResponse
     {
