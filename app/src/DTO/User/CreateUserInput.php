@@ -11,6 +11,10 @@ final readonly class CreateUserInput
     public function __construct(
         #[Assert\NotBlank(message: 'Username must not be blank.')]
         #[Assert\Length(max: 30, maxMessage: 'Username cannot exceed {{ limit }} characters.')]
+        #[Assert\Regex(
+            pattern: '/^[A-Za-z0-9]+(?:[_-][A-Za-z0-9]+)*$/',
+            message: 'Username can only contain letters, numbers, underscores, and hyphens, and cannot start or end with an underscore or hyphen.'
+        )]
         public readonly string $username,
         
         #[Assert\Length(min: 8, minMessage: "Password must be at least {{ limit }} characters long")]
