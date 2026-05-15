@@ -9,7 +9,7 @@ trait SoftDeletableTrait
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $deletedAt = null;
 
-    public function getDeletedAt(): \DateTimeImmutable
+    public function getDeletedAt(): ?\DateTimeImmutable
     {
         return $this->deletedAt;
     }
@@ -17,5 +17,10 @@ trait SoftDeletableTrait
     public function softDelete(): void
     {
         $this->deletedAt = new \DateTimeImmutable();
+    }
+
+    public function isDeleted(): bool
+    {
+        return $this->deletedAt !== null;
     }
 }

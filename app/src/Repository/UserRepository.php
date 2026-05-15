@@ -3,16 +3,15 @@
 namespace App\Repository;
 
 use App\Entity\User;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Override;
+use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
-/**
- * @extends ServiceEntityRepository<User>
- */
-class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
+class UserRepository extends SoftDeleteRepository implements PasswordUpgraderInterface, UserLoaderInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
@@ -50,6 +49,15 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         return $query
             ->getQuery()
             ->getOneOrNullResult() !== null;
+    }
+
+    public function loadUserByIdentifier(string $identifier): ?UserInterface
+    {
+        return $this->withDeleted(fn() => $this->createQueryBuilder('u')
+                ->where('u.username = :username')
+                ->setParameter('username', $identifier)
+                ->getQuery()
+                ->getOneOrNullResult());
     }
 
     //    /**

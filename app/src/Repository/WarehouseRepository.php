@@ -3,13 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Warehouse;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-/**
- * @extends ServiceEntityRepository<Warehouse>
- */
-class WarehouseRepository extends ServiceEntityRepository
+class WarehouseRepository extends SoftDeleteRepository
 {
     public function __construct(ManagerRegistry $registry)
     {

@@ -11,6 +11,6 @@ final readonly class UserResponse
         public string $role,
         public \DateTimeImmutable $createdAt,
         public \DateTimeImmutable $updatedAt,
-        public \DateTimeImmutable $deletedAt,
+        public ?\DateTimeImmutable $deletedAt,
     ) {}
 }

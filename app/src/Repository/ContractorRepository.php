@@ -3,13 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Contractor;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-/**
- * @extends ServiceEntityRepository<Contractor>
- */
-class ContractorRepository extends ServiceEntityRepository
+class ContractorRepository extends SoftDeleteRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
