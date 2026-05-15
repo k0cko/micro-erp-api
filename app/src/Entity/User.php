@@ -72,6 +72,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return new self($input->username, $hashedPassword, $input->firstName, $input->lastName, UserRole::from($input->role));
     }
 
+    public static function createSuperAdmin(
+        string $username,
+        string $hashedPassword,
+        string $firstName,
+        string $lastName,
+    ): self
+    {
+        return new self($username, $hashedPassword, $firstName, $lastName, UserRole::SuperAdmin);
+    }
+
     public function update(string $firstName, string $lastName): void
     {
         $this->updateFirstName($firstName);
