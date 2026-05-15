@@ -40,7 +40,6 @@ class DeliveryController extends AbstractController
         #[CurrentUser] User $user
     ): JsonResponse {
         $id = $this->createDeliveryService->execute($input, $user);
-
         return $this->json(['id' => $id], JsonResponse::HTTP_CREATED);
     }
 
@@ -49,12 +48,7 @@ class DeliveryController extends AbstractController
         Delivery $delivery,
         #[MapRequestPayload] DeliveryInput $input
     ): JsonResponse {
-        try {
-            $deliveryResponse = $this->updateDeliveryService->execute($delivery, $input);
-        } catch (InvalidStatusException $e) {
-            return $this->json(['error' => $e->getMessage()], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
-        }
-
+        $deliveryResponse = $this->updateDeliveryService->execute($delivery, $input);
         return $this->json($deliveryResponse, JsonResponse::HTTP_OK);
     }
 
@@ -62,12 +56,7 @@ class DeliveryController extends AbstractController
     public function delete(
         Delivery $delivery
     ): JsonResponse {
-        try {
-            $this->deleteDeliveryService->execute($delivery);
-        } catch (InvalidStatusException $e) {
-            return $this->json(['error' => $e->getMessage()], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
-        }
-        
+        $this->deleteDeliveryService->execute($delivery);
         return $this->json(null, JsonResponse::HTTP_NO_CONTENT);
     }
 }

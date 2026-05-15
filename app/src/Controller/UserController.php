@@ -47,12 +47,7 @@ final class UserController extends AbstractController
     {
         $this->denyAccessUnlessGranted(UserVoter::CREATE_SUPER_ADMIN, $input);
 
-        try {
-            $id = $this->createUserService->execute($input);
-        } catch (DuplicateResourceException $e) {
-            return $this->json(['error' => $e->getMessage()], JsonResponse::HTTP_CONFLICT);
-        }
-
+        $id = $this->createUserService->execute($input);
         return $this->json(['id' => $id], JsonResponse::HTTP_CREATED);
     }
 
@@ -63,7 +58,6 @@ final class UserController extends AbstractController
     ): JsonResponse
     {
         $userResponse = $this->updateUserService->execute($user, $input);
-
         return $this->json($userResponse, JsonResponse::HTTP_OK);
     }
 
@@ -73,12 +67,7 @@ final class UserController extends AbstractController
         #[MapRequestPayload] ChangeUserPasswordInput $input
     ): JsonResponse
     {
-        try {
-            $this->changeUserPasswordService->execute($input, $user);
-        } catch (OldPasswordMismatchException $e) {
-            return $this->json(['error' => $e->getMessage()], JsonResponse::HTTP_UNAUTHORIZED);
-        }
-
+        $this->changeUserPasswordService->execute($input, $user);
         return $this->json(null, JsonResponse::HTTP_NO_CONTENT);
     }
     

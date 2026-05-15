@@ -37,12 +37,7 @@ final class ContractorController extends AbstractController
         #[MapRequestPayload] ContractorInput $input,
     ): JsonResponse
     {
-        try {
-            $id = $this->createContractorService->execute($input);
-        } catch (DuplicateResourceException $e) {
-            return $this->json(['error' => $e->getMessage()], JsonResponse::HTTP_CONFLICT);
-        }
-
+        $id = $this->createContractorService->execute($input);
         return $this->json(['id' => $id], JsonResponse::HTTP_CREATED);
     }
 
@@ -52,12 +47,7 @@ final class ContractorController extends AbstractController
         #[MapRequestPayload] ContractorInput $input
     ): JsonResponse
     {
-        try {
-            $contractorResponse = $this->updateContractorService->execute($contractor, $input);
-        } catch (DuplicateResourceException $e) {
-            return $this->json(['error' => $e->getMessage()], JsonResponse::HTTP_CONFLICT);
-        }
-
+        $contractorResponse = $this->updateContractorService->execute($contractor, $input);
         return $this->json($contractorResponse, JsonResponse::HTTP_OK);
     }
 

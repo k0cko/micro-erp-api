@@ -39,12 +39,7 @@ final class ProductController extends AbstractController
         #[MapRequestPayload] ProductInput $input,
     ): JsonResponse
     {
-        try {
-            $id = $this->createProductService->execute($input);
-        } catch (DuplicateResourceException $e) {
-            return $this->json(['error' => $e->getMessage()], JsonResponse::HTTP_CONFLICT);
-        }
-
+        $id = $this->createProductService->execute($input);
         return $this->json(['id' => $id], JsonResponse::HTTP_CREATED);
     }
 
@@ -54,12 +49,7 @@ final class ProductController extends AbstractController
         #[MapRequestPayload] ProductInput $input,
     ): JsonResponse
     {
-        try {
-            $productResponse = $this->updateProductService->execute($input, $product);
-        } catch (DuplicateResourceException $e) {
-            return $this->json(['error' => $e->getMessage()], JsonResponse::HTTP_CONFLICT);
-        }
-
+        $productResponse = $this->updateProductService->execute($input, $product);
         return $this->json($productResponse, JsonResponse::HTTP_OK);
     }
 
@@ -68,12 +58,7 @@ final class ProductController extends AbstractController
         Product $product
     ): JsonResponse
     {
-        try {
-            $this->deleteProductService->execute($product);
-        } catch (ResourceInUseException $e) {
-            return $this->json(['error' => $e->getMessage()], JsonResponse::HTTP_CONFLICT);
-        }
-
+        $this->deleteProductService->execute($product);
         return $this->json(null, JsonResponse::HTTP_NO_CONTENT);
     }
 }

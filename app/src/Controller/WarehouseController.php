@@ -38,12 +38,7 @@ final class WarehouseController extends AbstractController
         #[MapRequestPayload] WarehouseInput $input,
     ): JsonResponse
     {
-        try {
-            $id = $this->createWarehouseService->execute($input);
-        } catch (DuplicateResourceException $e) {
-            return $this->json(['error' => $e->getMessage()], JsonResponse::HTTP_CONFLICT);
-        }
-
+        $id = $this->createWarehouseService->execute($input);
         return $this->json(['id' => $id], JsonResponse::HTTP_CREATED);
     }
 
@@ -53,12 +48,7 @@ final class WarehouseController extends AbstractController
         Warehouse $warehouse,
     ): JsonResponse
     {
-        try {
-            $warehouseProductResponse = $this->updateWarehouseService->execute($input, $warehouse);
-        } catch (DuplicateResourceException $e) {
-            return $this->json(['error' => $e->getMessage()], JsonResponse::HTTP_CONFLICT);
-        }
-
+        $warehouseProductResponse = $this->updateWarehouseService->execute($input, $warehouse);
         return $this->json($warehouseProductResponse, JsonResponse::HTTP_OK);
     }
 
@@ -68,7 +58,6 @@ final class WarehouseController extends AbstractController
     ): JsonResponse
     {
         $this->deleteWarehouseService->execute($warehouse);
-
         return $this->json(null, JsonResponse::HTTP_NO_CONTENT);
     }
 }
