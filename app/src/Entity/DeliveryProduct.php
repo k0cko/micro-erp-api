@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: DeliveryProductRepository::class)]
 #[ORM\HasLifecycleCallbacks]
+#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_PRODUCT_ID_DELIVERY_ID', columns: ['product_id', 'delivery_id'])]
 class DeliveryProduct extends InquiryProduct
 {
     #[ORM\Id]
