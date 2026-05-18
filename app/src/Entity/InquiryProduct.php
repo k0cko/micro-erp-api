@@ -13,10 +13,10 @@ abstract class InquiryProduct
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Product $product = null;
+    protected ?Product $product = null;
 
     #[ORM\Column]
-    private ?int $quantity = null;
+    protected ?int $quantity = null;
 
     public function getProduct(): ?Product
     {

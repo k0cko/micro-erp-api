@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\DTO\Delivery\DeliveryProductInput;
 use App\Enum\DeliveryProductStatus;
 use App\Repository\DeliveryProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -31,10 +32,37 @@ class DeliveryProduct extends InquiryProduct
     #[ORM\OneToMany(targetEntity: ProductMovement::class, mappedBy: 'deliveryProduct')]
     private Collection $productMovements;
 
-    public function __construct()
-    {
+    public function __construct(
+        Delivery $delivery,
+        DeliveryProductStatus $status,
+        Product $product,
+        int $quantity
+    ) {
+        $this->delivery = $delivery;
+        $this->status = $status;
+        $this->product = $product;
+        $this->quantity = $quantity;
         $this->productMovements = new ArrayCollection();
     }
+
+    public static function create(
+        Delivery $delivery,
+        Product $product,
+        int $quantity
+    ): self {
+        return new self(
+            $delivery,
+            DeliveryProductStatus::Pending,
+            $product,
+            $quantity
+        );
+    }
+
+    public function update(int $quantity): void
+    {
+        $this->quantity = $quantity;
+    }
+
 
     public function getId(): ?int
     {

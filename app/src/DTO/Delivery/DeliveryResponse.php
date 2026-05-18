@@ -2,7 +2,7 @@
 
 namespace App\DTO\Delivery;
 
-class DeliveryResponse
+final readonly class DeliveryResponse
 {
     public function __construct(
         public readonly string $number,

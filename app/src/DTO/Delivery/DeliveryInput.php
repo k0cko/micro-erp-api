@@ -5,7 +5,7 @@ namespace App\DTO\Delivery;
 use Symfony\Component\Serializer\Attribute\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class DeliveryInput
+final readonly class DeliveryInput
 {
     public function __construct(
         #[Assert\NotBlank(message: 'Contractor can not be blank.')]

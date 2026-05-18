@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\DTO\Delivery\DeliveryInput;
 use App\Entity\Delivery;
 use App\Entity\User;
-use App\Exception\InvalidStatusException;
 use App\Service\Delivery\CreateDeliveryService;
 use App\Service\Delivery\DeleteDeliveryService;
 use App\Service\Delivery\ListDeliveryService;
@@ -19,7 +18,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/deliveries')]
 #[IsGranted('ROLE_ADMIN')]
-class DeliveryController extends AbstractController
+final class DeliveryController extends AbstractController
 {
     public function __construct(
         private readonly ListDeliveryService $listDeliveryService,
