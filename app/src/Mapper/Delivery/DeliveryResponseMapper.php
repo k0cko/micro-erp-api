@@ -10,7 +10,7 @@ final readonly class DeliveryResponseMapper
     public static function map(Delivery $delivery): DeliveryResponse
     {
         return new DeliveryResponse(
-            number: sprintf('%06d', $delivery->getId()),
+            number: sprintf('%s-%06d', new \DateTimeImmutable()->format('Y'), $delivery->getId()),
             status: $delivery->getStatus()->label(),
             contractor: $delivery->getContractor()->getName(),
             warehouse: $delivery->getWarehouse()->getName(),

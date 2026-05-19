@@ -28,6 +28,7 @@ final class DeliveryController extends AbstractController
     ) {}
 
     #[Route('', methods: ['GET'])]
+    #[IsGranted('ROLE_WORKER')]
     public function index(): JsonResponse
     {
         return $this->json($this->listDeliveryService->execute(), JsonResponse::HTTP_OK);

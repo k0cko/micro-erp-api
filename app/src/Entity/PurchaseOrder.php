@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\DTO\PurchaseOrder\PurchaseOrderInput;
+use App\Enum\InquiryStatus;
 use App\Repository\PurchaseOrderRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -34,12 +36,40 @@ class PurchaseOrder extends Inquiry
      */
     #[ORM\OneToMany(targetEntity: PurchaseOrderProduct::class, mappedBy: 'purchaseOrder')]
     private Collection $purchaseOrderProducts;
-
-    public function __construct()
-    {
+ 
+    public function __construct(
+        \DateTimeImmutable $date,
+        InquiryStatus $status,
+        Contractor $contractor,
+        User $user,
+        Warehouse $warehouse
+    ) {
+        $this->date = $date;
+        $this->status = $status;
+        $this->contractor = $contractor;
+        $this->user = $user;
+        $this->warehouse = $warehouse;
         $this->purchaseOrderProducts = new ArrayCollection();
     }
 
+    public static function create(PurchaseOrderInput $input, User $user, Contractor $contractor, Warehouse $warehouse): self
+    {
+        return new self(
+            $input->date,
+            InquiryStatus::Draft,
+            $contractor,
+            $user,
+            $warehouse
+        );
+    }
+
+    public function update(PurchaseOrderInput $input, Contractor $contractor, Warehouse $warehouse): void
+    {
+        $this->date = $input->date;
+        $this->contractor = $contractor;
+        $this->warehouse = $warehouse;
+    }
+    
     public function getId(): ?int
     {
         return $this->id;
