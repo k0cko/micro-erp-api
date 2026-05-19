@@ -9,6 +9,7 @@ use App\Service\Delivery\CreateDeliveryProductService;
 use App\Service\Delivery\ListDeliveryProductService;
 use App\Service\Delivery\UpdateDeliveryProductService;
 use App\Service\Delivery\DeleteDeliveryProductService;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
@@ -53,6 +54,7 @@ final class DeliveryProductController extends AbstractController
     #[Route('/{deliveryProductId}', methods: ['DELETE'])]
     public function delete(
         Delivery $delivery,
+        #[MapEntity(id: 'deliveryProductId')]
         DeliveryProduct $deliveryProduct
     ): JsonResponse {
         $this->deleteDeliveryProductService->execute($delivery, $deliveryProduct);

@@ -31,9 +31,35 @@ class PurchaseOrderProduct extends InquiryProduct
     #[ORM\OneToMany(targetEntity: ProductMovement::class, mappedBy: 'purchaseOrderProduct')]
     private Collection $productMovements;
 
-    public function __construct()
-    {
+    public function __construct(
+        PurchaseOrder $purchaseOrder,
+        PurchaseOrderProductStatus $status,
+        Product $product,
+        int $quantity
+    ) {
+        $this->purchaseOrder = $purchaseOrder;
+        $this->status = $status;
+        $this->product = $product;
+        $this->quantity = $quantity;
         $this->productMovements = new ArrayCollection();
+    }
+
+    public static function create(
+        PurchaseOrder $purchaseOrder,
+        Product $product,
+        int $quantity
+    ): self {
+        return new self(
+            $purchaseOrder,
+            PurchaseOrderProductStatus::Pending,
+            $product,
+            $quantity
+        );
+    }
+
+    public function update(int $quantity): void
+    {
+        $this->quantity = $quantity;
     }
 
     public function getId(): ?int

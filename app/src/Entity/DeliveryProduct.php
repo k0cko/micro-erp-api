@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\DTO\Delivery\DeliveryProductInput;
 use App\Enum\DeliveryProductStatus;
 use App\Repository\DeliveryProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
