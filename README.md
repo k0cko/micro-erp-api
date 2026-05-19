@@ -33,7 +33,7 @@ The architecture follows Domain-Driven Design principles, so the code is organiz
 1. Clone the repo `git clone git@github.com:k0cko/micro-erp-api.git`
 2. Go into repository `cd micro-erp-api`
 3. Copy .env.example to .env `cp .env.example .env`
-4. Initialize the containers `docker-compose up -d` (*JWT keys are generated automatically on container start*)
+4. Initialize the containers `docker compose up -d` (*JWT keys are generated automatically on container start*)
 5. Enter the PHP container `docker exec -it micro-erp-php sh`
 6. Run migrations `php bin/console doctrine:migrations:migrate`
 7. Create the super admin with the custom command and follow the prompts `php bin/console app:create-super-admin`
