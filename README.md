@@ -48,6 +48,7 @@ The architecture follows Domain-Driven Design principles, so the code is organiz
 
 **Planned:**
 
+* Assign users to warehouses
 * Audit log (created_by / updated_by)
 * Login rate limiting
 * Delivery / order imports
