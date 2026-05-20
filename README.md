@@ -38,6 +38,20 @@ The architecture follows Domain-Driven Design principles, so the code is organiz
 6. Run migrations `php bin/console doctrine:migrations:migrate`
 7. Create the super admin with the custom command and follow the prompts `php bin/console app:create-super-admin`
 
+## Testing the API
+
+An interactive [Bruno](https://www.usebruno.com/) collection is included in the repository.
+
+**Note:** Since there are no automated functional tests yet, this collection is the best way to verify system behavior manually.
+
+**Getting started:**
+1. Open Bruno and **Import Collection** using the `micro-erp-api.yml` file in the repo.
+2. Select the **Micro ERP API Environment** from the dropdown in the top right.
+3. Run the `POST /login` request (in the `Auth` folder) with the admin credentials you created during setup.
+4. Copy the resulting token, paste it into the `token` environment variable, and hit save.
+
+*(Note: There is also a Postman-compatible export (`micro-erp-api-postman.json`) included if that is your preferred API client.)*
+
 ## Roadmap
 
 **In progress / coming next:**

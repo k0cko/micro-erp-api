@@ -1,0 +1,912 @@
+opencollection: 1.0.0
+info:
+  name: micro-erp-api
+config:
+  proxy:
+    inherit: true
+    config:
+      protocol: http
+      hostname: ''
+      port: ''
+      auth:
+        username: ''
+        password: ''
+      bypassProxy: ''
+  environments:
+    - name: Micro ERP API Environment
+      variables:
+        - name: baseUrl
+          value: localhost
+        - name: token
+          secret: true
+items:
+  - info:
+      name: Auth
+      type: folder
+      seq: 1
+    request:
+      auth: inherit
+    items:
+      - info:
+          name: Login
+          type: http
+          seq: 1
+          tags:
+            - Auth
+        http:
+          method: POST
+          url: '{{baseUrl}}/login'
+          body:
+            type: json
+            data: |-
+              {
+                "username": "test",
+                "password": "password"
+              }
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+        docs: Returns a JWT. Paste the `token` value into the environment variable.
+      - info:
+          name: Logout (invalidates JWT via blocklist)
+          type: http
+          seq: 2
+          tags:
+            - Auth
+        http:
+          method: POST
+          url: '{{baseUrl}}/logout'
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+  - info:
+      name: Contractors
+      type: folder
+      seq: 1
+    request:
+      auth: inherit
+    items:
+      - info:
+          name: Create Contractor
+          type: http
+          seq: 2
+          tags:
+            - Contractors
+        http:
+          method: POST
+          url: '{{baseUrl}}/contractors'
+          body:
+            type: json
+            data: |-
+              {
+                "name": "Acme Corp",
+                "type": "supplier"
+              }
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+        docs: Requires `ROLE_ADMIN`.
+      - info:
+          name: Delete Contractor (soft-delete)
+          type: http
+          seq: 4
+          tags:
+            - Contractors
+        http:
+          method: DELETE
+          url: '{{baseUrl}}/contractors/:id'
+          params:
+            - name: id
+              value: ''
+              type: path
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+        docs: Requires `ROLE_ADMIN`.
+      - info:
+          name: List Contractors
+          type: http
+          seq: 1
+          tags:
+            - Contractors
+        http:
+          method: GET
+          url: '{{baseUrl}}/contractors'
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+        docs: Requires `ROLE_ADMIN`.
+      - info:
+          name: Update Contractor
+          type: http
+          seq: 3
+          tags:
+            - Contractors
+        http:
+          method: PUT
+          url: '{{baseUrl}}/contractors/:id'
+          params:
+            - name: id
+              value: ''
+              type: path
+          body:
+            type: json
+            data: |-
+              {
+                "name": "Acme Corp",
+                "type": "supplier"
+              }
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+        docs: Requires `ROLE_ADMIN`.
+  - info:
+      name: Deliveries
+      type: folder
+      seq: 1
+    request:
+      auth: inherit
+    items:
+      - info:
+          name: Create Delivery
+          type: http
+          seq: 2
+          tags:
+            - Deliveries
+        http:
+          method: POST
+          url: '{{baseUrl}}/deliveries'
+          body:
+            type: json
+            data: |-
+              {
+                "contractor_id": 1,
+                "warehouse_id": 1,
+                "date": "2026-05-20T00:00:00+00:00"
+              }
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+        docs: Requires `ROLE_ADMIN`. Created with status `draft`.
+      - info:
+          name: Delete Delivery
+          type: http
+          seq: 4
+          tags:
+            - Deliveries
+        http:
+          method: DELETE
+          url: '{{baseUrl}}/deliveries/:id'
+          params:
+            - name: id
+              value: ''
+              type: path
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+        docs: Requires `ROLE_ADMIN`. Only allowed when status is `draft`.
+      - info:
+          name: List Deliveries
+          type: http
+          seq: 1
+          tags:
+            - Deliveries
+        http:
+          method: GET
+          url: '{{baseUrl}}/deliveries'
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+        docs: Requires `ROLE_WORKER`.
+      - info:
+          name: Update Delivery
+          type: http
+          seq: 3
+          tags:
+            - Deliveries
+        http:
+          method: PUT
+          url: '{{baseUrl}}/deliveries/:id'
+          params:
+            - name: id
+              value: ''
+              type: path
+          body:
+            type: json
+            data: |-
+              {
+                "contractor_id": 1,
+                "warehouse_id": 1,
+                "date": "2026-05-20T00:00:00+00:00"
+              }
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+        docs: Requires `ROLE_ADMIN`. Only allowed when status is `draft`.
+      - info:
+          name: Complete Delivery
+          type: http
+          seq: 5
+        http:
+          method: PUT
+          url: '{{baseUrl}}/deliveries/1/complete'
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+  - info:
+      name: Delivery_Products
+      type: folder
+      seq: 1
+    request:
+      auth: inherit
+    items:
+      - info:
+          name: Add Products to Delivery
+          type: http
+          seq: 2
+          tags:
+            - Delivery_Products
+        http:
+          method: POST
+          url: '{{baseUrl}}/deliveries/:id/products'
+          params:
+            - name: id
+              value: ''
+              type: path
+              description: Delivery ID
+          body:
+            type: json
+            data: |-
+              {
+                "delivery_products": [
+                  {
+                    "product_id": 1,
+                    "quantity": 10
+                  }
+                ]
+              }
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+        docs: Requires `ROLE_ADMIN`. Not allowed when delivery is `completed` or `cancelled`.
+      - info:
+          name: List Delivery Products
+          type: http
+          seq: 1
+          tags:
+            - Delivery_Products
+        http:
+          method: GET
+          url: '{{baseUrl}}/deliveries/:id/products'
+          params:
+            - name: id
+              value: ''
+              type: path
+              description: Delivery ID
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+        docs: Requires `ROLE_ADMIN`.
+      - info:
+          name: Remove a Product from Delivery
+          type: http
+          seq: 4
+          tags:
+            - Delivery_Products
+        http:
+          method: DELETE
+          url: '{{baseUrl}}/deliveries/:id/products/:deliveryProductId'
+          params:
+            - name: id
+              value: ''
+              type: path
+              description: Delivery ID
+            - name: deliveryProductId
+              value: ''
+              type: path
+              description: DeliveryProduct ID
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+        docs: Requires `ROLE_ADMIN`. Not allowed when delivery is `completed` or `cancelled`.
+      - info:
+          name: Update Delivery Products (quantity)
+          type: http
+          seq: 3
+          tags:
+            - Delivery_Products
+        http:
+          method: PUT
+          url: '{{baseUrl}}/deliveries/:id/products'
+          params:
+            - name: id
+              value: ''
+              type: path
+              description: Delivery ID
+          body:
+            type: json
+            data: |-
+              {
+                "delivery_products": [
+                  {
+                    "product_id": 1,
+                    "quantity": 10
+                  }
+                ]
+              }
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+        docs: Requires `ROLE_ADMIN`. Not allowed when delivery is `completed` or `cancelled`.
+  - info:
+      name: Products
+      type: folder
+      seq: 1
+    request:
+      auth: inherit
+    items:
+      - info:
+          name: Create Product
+          type: http
+          seq: 2
+          tags:
+            - Products
+        http:
+          method: POST
+          url: '{{baseUrl}}/products'
+          body:
+            type: json
+            data: |-
+              {
+                "name": "Widget A",
+                "description": "A great widget"
+              }
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+        docs: Requires `ROLE_ADMIN`.
+      - info:
+          name: Delete Product
+          type: http
+          seq: 4
+          tags:
+            - Products
+        http:
+          method: DELETE
+          url: '{{baseUrl}}/products/:id'
+          params:
+            - name: id
+              value: ''
+              type: path
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+        docs: Requires `ROLE_ADMIN`. Fails if product has movements.
+      - info:
+          name: List Products
+          type: http
+          seq: 1
+          tags:
+            - Products
+        http:
+          method: GET
+          url: '{{baseUrl}}/products'
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+        docs: Requires `ROLE_WORKER`.
+      - info:
+          name: Update Product
+          type: http
+          seq: 3
+          tags:
+            - Products
+        http:
+          method: PUT
+          url: '{{baseUrl}}/products/:id'
+          params:
+            - name: id
+              value: ''
+              type: path
+          body:
+            type: json
+            data: |-
+              {
+                "name": "Widget A",
+                "description": "A great widget"
+              }
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+        docs: Requires `ROLE_ADMIN`.
+  - info:
+      name: Purchase_Order_Products
+      type: folder
+      seq: 1
+    request:
+      auth: inherit
+    items:
+      - info:
+          name: Add Products to Purchase Order
+          type: http
+          seq: 2
+          tags:
+            - Purchase_Order_Products
+        http:
+          method: POST
+          url: '{{baseUrl}}/purchase_orders/:id/products'
+          params:
+            - name: id
+              value: ''
+              type: path
+              description: Purchase Order ID
+          body:
+            type: json
+            data: |-
+              {
+                "purchase_order_products": [
+                  {
+                    "product_id": 1,
+                    "quantity": 10
+                  }
+                ]
+              }
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+        docs: Requires `ROLE_ADMIN`. Not allowed when order is `completed` or `cancelled`.
+      - info:
+          name: List Purchase Order Products
+          type: http
+          seq: 1
+          tags:
+            - Purchase_Order_Products
+        http:
+          method: GET
+          url: '{{baseUrl}}/purchase_orders/:id/products'
+          params:
+            - name: id
+              value: ''
+              type: path
+              description: Purchase Order ID
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+        docs: Requires `ROLE_ADMIN`.
+      - info:
+          name: Remove a Product from Purchase Order
+          type: http
+          seq: 4
+          tags:
+            - Purchase_Order_Products
+        http:
+          method: DELETE
+          url: '{{baseUrl}}/purchase_orders/:id/products/:purchaseOrderProductId'
+          params:
+            - name: id
+              value: ''
+              type: path
+              description: Purchase Order ID
+            - name: purchaseOrderProductId
+              value: ''
+              type: path
+              description: PurchaseOrderProduct ID
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+        docs: Requires `ROLE_ADMIN`. Not allowed when order is `completed` or `cancelled`.
+      - info:
+          name: Update Purchase Order Products (quantity)
+          type: http
+          seq: 3
+          tags:
+            - Purchase_Order_Products
+        http:
+          method: PUT
+          url: '{{baseUrl}}/purchase_orders/:id/products'
+          params:
+            - name: id
+              value: ''
+              type: path
+              description: Purchase Order ID
+          body:
+            type: json
+            data: |-
+              {
+                "purchase_order_products": [
+                  {
+                    "product_id": 1,
+                    "quantity": 10
+                  }
+                ]
+              }
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+        docs: Requires `ROLE_ADMIN`. Not allowed when order is `completed` or `cancelled`.
+  - info:
+      name: Purchase_Orders
+      type: folder
+      seq: 1
+    request:
+      auth: inherit
+    items:
+      - info:
+          name: Create Purchase Order
+          type: http
+          seq: 2
+          tags:
+            - Purchase_Orders
+        http:
+          method: POST
+          url: '{{baseUrl}}/purchase_orders'
+          body:
+            type: json
+            data: |-
+              {
+                "contractor_id": 1,
+                "warehouse_id": 1,
+                "date": "2026-05-20T00:00:00+00:00"
+              }
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+        docs: Requires `ROLE_ADMIN`. Created with status `draft`.
+      - info:
+          name: Delete Purchase Order
+          type: http
+          seq: 4
+          tags:
+            - Purchase_Orders
+        http:
+          method: DELETE
+          url: '{{baseUrl}}/purchase_orders/:id'
+          params:
+            - name: id
+              value: ''
+              type: path
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+        docs: Requires `ROLE_ADMIN`. Only allowed when status is `draft`.
+      - info:
+          name: List Purchase Orders
+          type: http
+          seq: 1
+          tags:
+            - Purchase_Orders
+        http:
+          method: GET
+          url: '{{baseUrl}}/purchase_orders'
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+        docs: Requires `ROLE_ADMIN`.
+      - info:
+          name: Update Purchase Order
+          type: http
+          seq: 3
+          tags:
+            - Purchase_Orders
+        http:
+          method: PUT
+          url: '{{baseUrl}}/purchase_orders/:id'
+          params:
+            - name: id
+              value: ''
+              type: path
+          body:
+            type: json
+            data: |-
+              {
+                "contractor_id": 1,
+                "warehouse_id": 1,
+                "date": "2026-05-20T00:00:00+00:00"
+              }
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+        docs: Requires `ROLE_ADMIN`. Only allowed when status is `draft`.
+  - info:
+      name: Users
+      type: folder
+      seq: 1
+    request:
+      auth: inherit
+    items:
+      - info:
+          name: Change own password
+          type: http
+          seq: 5
+          tags:
+            - Users
+        http:
+          method: PUT
+          url: '{{baseUrl}}/users/change-password'
+          body:
+            type: json
+            data: |-
+              {
+                "old_password": "password123",
+                "new_password": "newpassword123",
+                "confirmed_password": "newpassword123"
+              }
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+      - info:
+          name: Create User
+          type: http
+          seq: 2
+          tags:
+            - Users
+        http:
+          method: POST
+          url: '{{baseUrl}}/users'
+          body:
+            type: json
+            data: |-
+              {
+                "username": "john_doe",
+                "password": "password123",
+                "confirmed_password": "password123",
+                "first_name": "John",
+                "last_name": "Doe",
+                "role": "worker"
+              }
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+        docs: Requires `ROLE_ADMIN`. Only `ROLE_SUPER_ADMIN` can create another super admin.
+      - info:
+          name: Delete User (soft-delete)
+          type: http
+          seq: 4
+          tags:
+            - Users
+        http:
+          method: DELETE
+          url: '{{baseUrl}}/users/:id'
+          params:
+            - name: id
+              value: ''
+              type: path
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+        docs: Requires `ROLE_SUPER_ADMIN`.
+      - info:
+          name: List Users
+          type: http
+          seq: 1
+          tags:
+            - Users
+        http:
+          method: GET
+          url: '{{baseUrl}}/users'
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+        docs: Requires `ROLE_WORKER`.
+      - info:
+          name: Update User (own profile)
+          type: http
+          seq: 3
+          tags:
+            - Users
+        http:
+          method: PUT
+          url: '{{baseUrl}}/users/:id'
+          params:
+            - name: id
+              value: ''
+              type: path
+          body:
+            type: json
+            data: |-
+              {
+                "first_name": "John",
+                "last_name": "Smith"
+              }
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+  - info:
+      name: Warehouses
+      type: folder
+      seq: 1
+    request:
+      auth: inherit
+    items:
+      - info:
+          name: Create Warehouse
+          type: http
+          seq: 2
+          tags:
+            - Warehouses
+        http:
+          method: POST
+          url: '{{baseUrl}}/warehouses'
+          body:
+            type: json
+            data: |-
+              {
+                "name": "Main Warehouse"
+              }
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+        docs: Requires `ROLE_ADMIN`.
+      - info:
+          name: Delete Warehouse (soft-delete)
+          type: http
+          seq: 4
+          tags:
+            - Warehouses
+        http:
+          method: DELETE
+          url: '{{baseUrl}}/warehouses/:id'
+          params:
+            - name: id
+              value: ''
+              type: path
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+        docs: Requires `ROLE_ADMIN`.
+      - info:
+          name: List Warehouses
+          type: http
+          seq: 1
+          tags:
+            - Warehouses
+        http:
+          method: GET
+          url: '{{baseUrl}}/warehouses'
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+        docs: Requires `ROLE_WORKER`.
+      - info:
+          name: Update Warehouse
+          type: http
+          seq: 3
+          tags:
+            - Warehouses
+        http:
+          method: PUT
+          url: '{{baseUrl}}/warehouses/:id'
+          params:
+            - name: id
+              value: ''
+              type: path
+          body:
+            type: json
+            data: |-
+              {
+                "name": "Main Warehouse"
+              }
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+        docs: Requires `ROLE_ADMIN`.
+request:
+  auth:
+    type: bearer
+    token: '{{token}}'
+bundled: true
+extensions:
+  bruno:
+    ignore:
+      - node_modules
+      - .git
+    exportedAt: '2026-05-20T11:37:06.945Z'
+    exportedUsing: Bruno
