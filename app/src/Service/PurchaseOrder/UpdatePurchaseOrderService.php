@@ -5,8 +5,6 @@ namespace App\Service\PurchaseOrder;
 use App\DTO\PurchaseOrder\PurchaseOrderInput;
 use App\DTO\PurchaseOrder\PurchaseOrderResponse;
 use App\Entity\PurchaseOrder;
-use App\Enum\InquiryStatus;
-use App\Exception\InvalidStatusException;
 use App\Mapper\PurchaseOrder\PurchaseOrderResponseMapper;
 use App\Repository\ContractorRepository;
 use App\Repository\WarehouseRepository;
@@ -23,9 +21,6 @@ final class UpdatePurchaseOrderService
 
     public function execute(PurchaseOrder $purchaseOrder, PurchaseOrderInput $input): PurchaseOrderResponse
     {
-        if ($purchaseOrder->getStatus() !== InquiryStatus::Draft) {
-            throw InvalidStatusException::create('Purchase order', 'updated', InquiryStatus::Draft->value);
-        }
         $contractor = $this->contractorRepository->find($input->contractorId) ?? throw new NotFoundHttpException('Contractor not found.');
         $warehouse = $this->warehouseRepository->find($input->warehouseId) ?? throw new NotFoundHttpException('Warehouse not found.');
 

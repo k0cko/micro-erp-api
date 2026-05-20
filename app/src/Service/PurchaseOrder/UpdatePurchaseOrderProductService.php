@@ -4,8 +4,6 @@ namespace App\Service\PurchaseOrder;
 
 use App\DTO\PurchaseOrder\PurchaseOrderProductsInput;
 use App\Entity\PurchaseOrder;
-use App\Enum\InquiryStatus;
-use App\Exception\InvalidStatusException;
 use App\Repository\ProductRepository;
 use App\Repository\PurchaseOrderProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -21,10 +19,6 @@ final class UpdatePurchaseOrderProductService
 
     public function execute(PurchaseOrderProductsInput $input, PurchaseOrder $purchaseOrder): array
     {
-        if (in_array($purchaseOrder->getStatus(), [InquiryStatus::Completed, InquiryStatus::Cancelled])) {
-            throw InvalidStatusException::forInvalidAction('Purchase order products', 'created', 'purchase order', [InquiryStatus::Completed->label(), InquiryStatus::Cancelled->label()]);
-        }
-
         $purchaseOrderProducts = [];
         foreach ($input->purchaseOrderProducts as $purchaseOrderProductInput) {
             $product = $this->productRepository->find($purchaseOrderProductInput->productId) ?? throw new NotFoundHttpException('Product not found.');

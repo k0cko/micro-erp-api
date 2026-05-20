@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Enum\DeliveryProductStatus;
+use App\Enum\InquiryStatus;
 use App\Repository\DeliveryProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -49,6 +50,7 @@ class DeliveryProduct extends InquiryProduct
         Product $product,
         int $quantity
     ): self {
+        $delivery->assertCanModifyProduct('create', InquiryStatus::Draft);
         return new self(
             $delivery,
             DeliveryProductStatus::Pending,
@@ -59,9 +61,17 @@ class DeliveryProduct extends InquiryProduct
 
     public function update(int $quantity): void
     {
+        $this->delivery->assertCanModifyProduct('update', InquiryStatus::Draft);
         $this->quantity = $quantity;
     }
 
+    public function delete(): void
+    {
+        $this->delivery->assertCanModifyProduct(
+            'delete',
+            InquiryStatus::Draft
+        );
+    }
 
     public function getId(): ?int
     {

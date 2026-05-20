@@ -5,8 +5,6 @@ namespace App\Service\Delivery;
 use App\DTO\Delivery\DeliveryInput;
 use App\DTO\Delivery\DeliveryResponse;
 use App\Entity\Delivery;
-use App\Enum\InquiryStatus;
-use App\Exception\InvalidStatusException;
 use App\Mapper\Delivery\DeliveryResponseMapper;
 use App\Repository\ContractorRepository;
 use App\Repository\WarehouseRepository;
@@ -23,9 +21,6 @@ final class UpdateDeliveryService
 
     public function execute(Delivery $delivery, DeliveryInput $input): DeliveryResponse
     {
-        if ($delivery->getStatus() !== InquiryStatus::Draft) {
-            throw InvalidStatusException::create('Delivery', 'updated', InquiryStatus::Draft->value);
-        }
         $contractor = $this->contractorRepository->find($input->contractorId) ?? throw new NotFoundHttpException('Contractor not found.');
         $warehouse = $this->warehouseRepository->find($input->warehouseId) ?? throw new NotFoundHttpException('Warehouse not found.');
 

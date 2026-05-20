@@ -4,8 +4,6 @@ namespace App\Service\Delivery;
 
 use App\DTO\Delivery\DeliveryProductsInput;
 use App\Entity\Delivery;
-use App\Enum\InquiryStatus;
-use App\Exception\InvalidStatusException;
 use App\Repository\DeliveryProductRepository;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -21,10 +19,6 @@ final class UpdateDeliveryProductService
 
     public function execute(DeliveryProductsInput $input, Delivery $delivery): array
     {
-        if (in_array($delivery->getStatus(), [InquiryStatus::Completed, InquiryStatus::Cancelled])) {
-            throw InvalidStatusException::forInvalidAction('Delivery products', 'updated', 'delivery', [InquiryStatus::Completed->label(), InquiryStatus::Cancelled->label()]);
-        }
-
         $deliveryProducts = [];
         foreach ($input->deliveryProducts as $deliveryProductInput) {
             $product = $this->productRepository->find($deliveryProductInput->productId) ?? throw new NotFoundHttpException('Product not found.');

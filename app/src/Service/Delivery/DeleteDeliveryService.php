@@ -3,8 +3,6 @@
 namespace App\Service\Delivery;
 
 use App\Entity\Delivery;
-use App\Enum\InquiryStatus;
-use App\Exception\InvalidStatusException;
 use Doctrine\ORM\EntityManagerInterface;
 
 final class DeleteDeliveryService
@@ -14,11 +12,8 @@ final class DeleteDeliveryService
     ) {}
 
     public function execute(Delivery $delivery): void
-    {
-        if ($delivery->getStatus() !== InquiryStatus::Draft) {
-            throw InvalidStatusException::create('Delivery', 'deleted', InquiryStatus::Draft->value);
-        }
-        
+    {   
+        $delivery->delete();
         $this->entityManager->remove($delivery);
         $this->entityManager->flush();
     }

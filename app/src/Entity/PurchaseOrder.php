@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\DTO\PurchaseOrder\PurchaseOrderInput;
 use App\Enum\InquiryStatus;
+use App\Exception\InvalidStatusException;
 use App\Repository\PurchaseOrderRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -65,11 +66,32 @@ class PurchaseOrder extends Inquiry
 
     public function update(PurchaseOrderInput $input, Contractor $contractor, Warehouse $warehouse): void
     {
+        $this->assertCanModifyEntity(
+            'Purchase order',
+            'update',
+            InquiryStatus::Draft
+        );
         $this->date = $input->date;
         $this->contractor = $contractor;
         $this->warehouse = $warehouse;
     }
     
+    public function delete(): void
+    {
+        $this->assertCanModifyEntity(
+            'Purchase order',
+            'delete',
+            InquiryStatus::Draft
+        );
+    }
+
+    public function assertCanModifyProduct(string $action, InquiryStatus ...$allowed): void
+    {
+        if (!$this->isStatusAllowed($allowed)) {
+            throw InvalidStatusException::forInvalidAction('Purchase order products', $action, 'purchase order', array_map(fn($status) => $status->label(), $allowed));
+        }
+    }
+
     public function getId(): ?int
     {
         return $this->id;

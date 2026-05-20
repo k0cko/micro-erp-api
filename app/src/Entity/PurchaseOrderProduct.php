@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\InquiryStatus;
 use App\Enum\PurchaseOrderProductStatus;
 use App\Repository\PurchaseOrderProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -49,6 +50,10 @@ class PurchaseOrderProduct extends InquiryProduct
         Product $product,
         int $quantity
     ): self {
+        $purchaseOrder->assertCanModifyProduct(
+            'create',
+            InquiryStatus::Draft
+        );
         return new self(
             $purchaseOrder,
             PurchaseOrderProductStatus::Pending,
@@ -59,7 +64,19 @@ class PurchaseOrderProduct extends InquiryProduct
 
     public function update(int $quantity): void
     {
+        $this->purchaseOrder->assertCanModifyProduct(
+            'update',
+            InquiryStatus::Draft
+        );
         $this->quantity = $quantity;
+    }
+
+    public function delete(): void
+    {
+        $this->purchaseOrder->assertCanModifyProduct(
+            'delete',
+            InquiryStatus::Draft
+        );
     }
 
     public function getId(): ?int

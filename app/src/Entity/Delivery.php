@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\DTO\Delivery\DeliveryInput;
 use App\Enum\InquiryStatus;
+use App\Exception\InvalidStatusException;
 use App\Repository\DeliveryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -64,9 +65,30 @@ class Delivery extends Inquiry
 
     public function update(DeliveryInput $input, Contractor $contractor, Warehouse $warehouse): void
     {
+        $this->assertCanModifyEntity(
+            'Delivery',
+            'update',
+            InquiryStatus::Draft
+        );
         $this->date = $input->date;
         $this->contractor = $contractor;
         $this->warehouse = $warehouse;
+    }
+
+    public function delete(): void
+    {
+        $this->assertCanModifyEntity(
+            'Delivery',
+            'delete',
+            InquiryStatus::Draft
+        );
+    }
+
+    public function assertCanModifyProduct(string $action, InquiryStatus ...$allowed): void
+    {
+        if (!$this->isStatusAllowed($allowed)) {
+            throw InvalidStatusException::forInvalidAction('Delivery products', $action, 'delivery', array_map(fn($status) => $status->label(), $allowed));
+        }
     }
 
     public function getId(): ?int
