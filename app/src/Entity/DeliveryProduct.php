@@ -73,6 +73,11 @@ class DeliveryProduct extends InquiryProduct
         );
     }
 
+    public function receive(): void
+    {
+        $this->status = DeliveryProductStatus::Received;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

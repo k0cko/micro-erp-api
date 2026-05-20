@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\DTO\Delivery\DeliveryInput;
 use App\Entity\Delivery;
 use App\Entity\User;
+use App\Service\Delivery\CompleteDeliveryService;
 use App\Service\Delivery\CreateDeliveryService;
 use App\Service\Delivery\DeleteDeliveryService;
 use App\Service\Delivery\ListDeliveryService;
@@ -25,6 +26,7 @@ final class DeliveryController extends AbstractController
         private readonly CreateDeliveryService $createDeliveryService,
         private readonly UpdateDeliveryService $updateDeliveryService,
         private readonly DeleteDeliveryService $deleteDeliveryService,
+        private readonly CompleteDeliveryService $completeDeliveryService
     ) {}
 
     #[Route('', methods: ['GET'])]
@@ -49,6 +51,14 @@ final class DeliveryController extends AbstractController
         #[MapRequestPayload] DeliveryInput $input
     ): JsonResponse {
         $deliveryResponse = $this->updateDeliveryService->execute($delivery, $input);
+        return $this->json($deliveryResponse, JsonResponse::HTTP_OK);
+    }
+
+    #[Route('/{id}/complete', methods: ['PUT'])]
+    public function complete(
+        Delivery $delivery
+    ): JsonResponse {
+        $deliveryResponse = $this->completeDeliveryService->execute($delivery);
         return $this->json($deliveryResponse, JsonResponse::HTTP_OK);
     }
 

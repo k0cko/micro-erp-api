@@ -28,6 +28,27 @@ class WarehouseProduct
     #[ORM\Column]
     private ?int $quantity = null;
 
+    public function __construct(Warehouse $warehouse, Product $product, int $quantity)
+    {
+        $this->warehouse = $warehouse;
+        $this->product = $product;
+        $this->quantity = $quantity;
+    }
+
+    public static function create(Warehouse $warehouse, Product $product, int $quantity): self
+    {
+        return new self(
+            $warehouse,
+            $product,
+            $quantity,
+        );
+    }
+
+    public function addQuantity(int $quantity): void
+    {
+        $this->quantity += $quantity;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

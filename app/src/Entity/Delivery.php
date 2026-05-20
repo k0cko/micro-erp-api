@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\DTO\Delivery\DeliveryInput;
 use App\Enum\InquiryStatus;
+use App\Event\DeliveryCompletedEvent;
 use App\Exception\InvalidStatusException;
 use App\Repository\DeliveryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -82,6 +83,23 @@ class Delivery extends Inquiry
             'delete',
             InquiryStatus::Draft
         );
+    }
+
+    private array $events = [];
+    public function complete(): void
+    {
+        $this->assertCanModifyEntity('Delivery', 'complete', InquiryStatus::InProgress);
+        $this->status = InquiryStatus::Completed;
+
+        $this->events[] = new DeliveryCompletedEvent($this);
+    }
+
+    public function releaseEvents(): array
+    {
+        $events = $this->events;
+        $this->events = [];
+
+        return $events;
     }
 
     public function assertCanModifyProduct(string $action, InquiryStatus ...$allowed): void
