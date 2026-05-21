@@ -28,7 +28,7 @@ final class DeliveryCompletedEventListener
                 continue;
             }
 
-            $deliveryProduct->receive();
+            $deliveryProduct->markAsReceived();
 
             $product = $deliveryProduct->getProduct();
             $quantity = $deliveryProduct->getQuantity();

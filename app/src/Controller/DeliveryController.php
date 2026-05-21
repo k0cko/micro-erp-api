@@ -10,6 +10,7 @@ use App\Service\Delivery\CreateDeliveryService;
 use App\Service\Delivery\DeleteDeliveryService;
 use App\Service\Delivery\ListDeliveryService;
 use App\Service\Delivery\UpdateDeliveryService;
+use App\Service\Delivery\StartDeliveryService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
@@ -26,7 +27,8 @@ final class DeliveryController extends AbstractController
         private readonly CreateDeliveryService $createDeliveryService,
         private readonly UpdateDeliveryService $updateDeliveryService,
         private readonly DeleteDeliveryService $deleteDeliveryService,
-        private readonly CompleteDeliveryService $completeDeliveryService
+        private readonly CompleteDeliveryService $completeDeliveryService,
+        private readonly StartDeliveryService $startDeliveryService,
     ) {}
 
     #[Route('', methods: ['GET'])]
@@ -51,6 +53,14 @@ final class DeliveryController extends AbstractController
         #[MapRequestPayload] DeliveryInput $input
     ): JsonResponse {
         $deliveryResponse = $this->updateDeliveryService->execute($delivery, $input);
+        return $this->json($deliveryResponse, JsonResponse::HTTP_OK);
+    }
+
+    #[Route('/{id}/start', methods: ['PUT'])]
+    public function start(
+        Delivery $delivery
+    ): JsonResponse {
+        $deliveryResponse = $this->startDeliveryService->execute($delivery);
         return $this->json($deliveryResponse, JsonResponse::HTTP_OK);
     }
 

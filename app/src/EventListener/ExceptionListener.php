@@ -2,6 +2,7 @@
 
 namespace App\EventListener;
 
+use App\Exception\BusinessRuleViolationException;
 use App\Exception\DuplicateResourceException;
 use App\Exception\InvalidStatusException;
 use App\Exception\OldPasswordMismatchException;
@@ -26,6 +27,7 @@ class ExceptionListener
                 OldPasswordMismatchException::class => $this->getResponse($exception->getMessage(), JsonResponse::HTTP_BAD_REQUEST),
                 ResourceInUseException::class => $this->getResponse($exception->getMessage(), JsonResponse::HTTP_CONFLICT),
                 UniqueConstraintViolationException::class => $this->getResponse('A duplicate resource already exists.', JsonResponse::HTTP_CONFLICT),
+                BusinessRuleViolationException::class => $this->getResponse($exception->getMessage(), JsonResponse::HTTP_CONFLICT),
                 default => $this->getResponse('Ooops, something went wrong.', JsonResponse::HTTP_INTERNAL_SERVER_ERROR),
             };
         } else {

@@ -53,7 +53,7 @@ class DeliveryProduct extends InquiryProduct
         $delivery->assertCanModifyProduct('create', InquiryStatus::Draft);
         return new self(
             $delivery,
-            DeliveryProductStatus::Pending,
+            DeliveryProductStatus::Draft,
             $product,
             $quantity
         );
@@ -73,9 +73,14 @@ class DeliveryProduct extends InquiryProduct
         );
     }
 
-    public function receive(): void
+    public function markAsReceived(): void
     {
         $this->status = DeliveryProductStatus::Received;
+    }
+
+    public function markAsPending(): void
+    {
+        $this->status = DeliveryProductStatus::Pending;
     }
 
     public function getId(): ?int

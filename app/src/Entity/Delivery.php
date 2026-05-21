@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\DTO\Delivery\DeliveryInput;
 use App\Enum\InquiryStatus;
 use App\Event\DeliveryCompletedEvent;
+use App\Exception\BusinessRuleViolationException;
 use App\Exception\InvalidStatusException;
 use App\Repository\DeliveryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -94,6 +95,13 @@ class Delivery extends Inquiry
         $this->events[] = new DeliveryCompletedEvent($this);
     }
 
+    public function start(): void
+    {
+        $this->assertHasProducts('starte');
+        $this->assertCanModifyEntity('Delivery', 'starte', InquiryStatus::Draft);
+        $this->status = InquiryStatus::InProgress;
+    }
+
     public function releaseEvents(): array
     {
         $events = $this->events;
@@ -106,6 +114,13 @@ class Delivery extends Inquiry
     {
         if (!$this->isStatusAllowed($allowed)) {
             throw InvalidStatusException::forInvalidAction('Delivery products', $action, 'delivery', array_map(fn($status) => $status->label(), $allowed));
+        }
+    }
+
+    public function assertHasProducts(string $action): void
+    {
+        if ($this->deliveryProducts->isEmpty()) {
+            throw BusinessRuleViolationException::forEmptyProductList('Delivery', $action);
         }
     }
 
