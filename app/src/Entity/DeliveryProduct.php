@@ -82,6 +82,11 @@ class DeliveryProduct extends InquiryProduct
     {
         $this->status = DeliveryProductStatus::Pending;
     }
+    
+    public function markAsCancelled(): void
+    {
+        $this->status = DeliveryProductStatus::Cancelled;
+    }
 
     public function getId(): ?int
     {

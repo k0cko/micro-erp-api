@@ -97,9 +97,15 @@ class Delivery extends Inquiry
 
     public function start(): void
     {
-        $this->assertHasProducts('starte');
+        $this->assertHasProducts('started');
         $this->assertCanModifyEntity('Delivery', 'starte', InquiryStatus::Draft);
         $this->status = InquiryStatus::InProgress;
+    }
+
+    public function cancel(): void
+    {
+        $this->assertCanModifyEntity('Delivery', 'starte', InquiryStatus::Draft, InquiryStatus::InProgress);
+        $this->status = InquiryStatus::Cancelled;
     }
 
     public function releaseEvents(): array
