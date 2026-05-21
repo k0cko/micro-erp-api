@@ -79,6 +79,11 @@ class PurchaseOrderProduct extends InquiryProduct
         );
     }
 
+    public function send(): void
+    {
+        $this->status = PurchaseOrderProductStatus::Sent;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

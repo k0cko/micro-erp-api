@@ -49,6 +49,11 @@ class WarehouseProduct
         $this->quantity += $quantity;
     }
 
+    public function removeQuantity(int $quantity): void
+    {
+        $this->quantity -= $quantity;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

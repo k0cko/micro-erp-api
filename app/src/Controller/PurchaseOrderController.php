@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\DTO\PurchaseOrder\PurchaseOrderInput;
 use App\Entity\PurchaseOrder;
 use App\Entity\User;
+use App\Service\PurchaseOrder\CompletePurchaseOrderService;
 use App\Service\PurchaseOrder\CreatePurchaseOrderService;
 use App\Service\PurchaseOrder\DeletePurchaseOrderService;
 use App\Service\PurchaseOrder\ListPurchaseOrderService;
@@ -25,6 +26,7 @@ final class PurchaseOrderController extends AbstractController
         private readonly CreatePurchaseOrderService $createPurchaseOrderService,
         private readonly UpdatePurchaseOrderService $updatePurchaseOrderService,
         private readonly DeletePurchaseOrderService $deletePurchaseOrderService,
+        private readonly CompletePurchaseOrderService $completePurchaseOrderService,
     ) {}
 
     #[Route('', methods: ['GET'])]
@@ -48,6 +50,14 @@ final class PurchaseOrderController extends AbstractController
         #[MapRequestPayload] PurchaseOrderInput $input
     ): JsonResponse {
         $purchaseOrderResponse = $this->updatePurchaseOrderService->execute($purchaseOrder, $input);
+        return $this->json($purchaseOrderResponse, JsonResponse::HTTP_OK);
+    }
+
+    #[Route('/{id}/complete', methods: ['PUT'])]
+    public function complete(
+        PurchaseOrder $purchaseOrder
+    ): JsonResponse {
+        $purchaseOrderResponse = $this->completePurchaseOrderService->execute($purchaseOrder);
         return $this->json($purchaseOrderResponse, JsonResponse::HTTP_OK);
     }
 

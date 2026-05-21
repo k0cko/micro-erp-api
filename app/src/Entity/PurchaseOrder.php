@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\DTO\PurchaseOrder\PurchaseOrderInput;
 use App\Enum\InquiryStatus;
+use App\Event\PurchaseOrderCompletedEvent;
 use App\Exception\InvalidStatusException;
 use App\Repository\PurchaseOrderRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -84,6 +85,24 @@ class PurchaseOrder extends Inquiry
             InquiryStatus::Draft
         );
     }
+
+    private array $events = [];
+    public function complete(): void
+    {
+        $this->assertCanModifyEntity('Purchase order', 'complete', InquiryStatus::InProgress);
+        $this->status = InquiryStatus::Completed;
+
+        $this->events[] = new PurchaseOrderCompletedEvent($this);
+    }
+
+    public function releaseEvents(): array
+    {
+        $events = $this->events;
+        $this->events = [];
+
+        return $events;
+    }
+
 
     public function assertCanModifyProduct(string $action, InquiryStatus ...$allowed): void
     {
