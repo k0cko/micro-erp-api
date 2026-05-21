@@ -79,9 +79,24 @@ class PurchaseOrderProduct extends InquiryProduct
         );
     }
 
-    public function send(): void
+    public function markAsPrepared(): void
+    {
+        $this->status = PurchaseOrderProductStatus::Prepared;
+    }
+
+    public function markAsSent(): void
     {
         $this->status = PurchaseOrderProductStatus::Sent;
+    }
+
+    public function markAsPending(): void
+    {
+        $this->status = PurchaseOrderProductStatus::Pending;
+    }
+
+    public function markAsCancelled(): void
+    {
+        $this->status = PurchaseOrderProductStatus::Cancelled;
     }
 
     public function getId(): ?int

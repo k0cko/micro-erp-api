@@ -5,10 +5,12 @@ namespace App\Controller;
 use App\DTO\PurchaseOrder\PurchaseOrderInput;
 use App\Entity\PurchaseOrder;
 use App\Entity\User;
+use App\Service\PurchaseOrder\CancelPurchaseOrderService;
 use App\Service\PurchaseOrder\CompletePurchaseOrderService;
 use App\Service\PurchaseOrder\CreatePurchaseOrderService;
 use App\Service\PurchaseOrder\DeletePurchaseOrderService;
 use App\Service\PurchaseOrder\ListPurchaseOrderService;
+use App\Service\PurchaseOrder\StartPurchaseOrderService;
 use App\Service\PurchaseOrder\UpdatePurchaseOrderService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -27,6 +29,8 @@ final class PurchaseOrderController extends AbstractController
         private readonly UpdatePurchaseOrderService $updatePurchaseOrderService,
         private readonly DeletePurchaseOrderService $deletePurchaseOrderService,
         private readonly CompletePurchaseOrderService $completePurchaseOrderService,
+        private readonly StartPurchaseOrderService $startPurchaseOrderService,
+        private readonly CancelPurchaseOrderService $cancelPurchaseOrderService,
     ) {}
 
     #[Route('', methods: ['GET'])]
@@ -50,6 +54,22 @@ final class PurchaseOrderController extends AbstractController
         #[MapRequestPayload] PurchaseOrderInput $input
     ): JsonResponse {
         $purchaseOrderResponse = $this->updatePurchaseOrderService->execute($purchaseOrder, $input);
+        return $this->json($purchaseOrderResponse, JsonResponse::HTTP_OK);
+    }
+
+    #[Route('/{id}/start', methods: ['PUT'])]
+    public function start(
+        PurchaseOrder $purchaseOrder,
+    ): JsonResponse {
+        $purchaseOrderResponse = $this->startPurchaseOrderService->execute($purchaseOrder);
+        return $this->json($purchaseOrderResponse, JsonResponse::HTTP_OK);
+    }
+
+    #[Route('/{id}/cancel', methods: ['PUT'])]
+    public function cancel(
+        PurchaseOrder $purchaseOrder,
+    ): JsonResponse {
+        $purchaseOrderResponse = $this->cancelPurchaseOrderService->execute($purchaseOrder);
         return $this->json($purchaseOrderResponse, JsonResponse::HTTP_OK);
     }
 

@@ -27,7 +27,7 @@ final class PurchaseOrderCompletedEventListener
                 continue;
             }
 
-            $purchaseOrderProduct->send();
+            $purchaseOrderProduct->markAsSent();
 
             $product = $purchaseOrderProduct->getProduct();
             $quantity = $purchaseOrderProduct->getQuantity();

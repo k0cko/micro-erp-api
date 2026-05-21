@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\DTO\PurchaseOrder\PurchaseOrderInput;
 use App\Enum\InquiryStatus;
 use App\Event\PurchaseOrderCompletedEvent;
+use App\Exception\BusinessRuleViolationException;
 use App\Exception\InvalidStatusException;
 use App\Repository\PurchaseOrderRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -95,6 +96,19 @@ class PurchaseOrder extends Inquiry
         $this->events[] = new PurchaseOrderCompletedEvent($this);
     }
 
+    public function start(): void
+    {
+        $this->assertHasProducts('started');
+        $this->assertCanModifyEntity('Purchase order', 'starte', InquiryStatus::Draft);
+        $this->status = InquiryStatus::InProgress;
+    }
+
+    public function cancel(): void
+    {
+        $this->assertCanModifyEntity('Purchase order', 'starte', InquiryStatus::Draft, InquiryStatus::InProgress);
+        $this->status = InquiryStatus::Cancelled;
+    }
+
     public function releaseEvents(): array
     {
         $events = $this->events;
@@ -103,6 +117,12 @@ class PurchaseOrder extends Inquiry
         return $events;
     }
 
+    public function assertHasProducts(string $action): void
+    {
+        if ($this->purchaseOrderProducts->isEmpty()) {
+            throw BusinessRuleViolationException::forEmptyProductList('Purchase order', $action);
+        }
+    }
 
     public function assertCanModifyProduct(string $action, InquiryStatus ...$allowed): void
     {
