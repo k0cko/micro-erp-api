@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\DTO\PurchaseOrder\PurchaseOrderInput;
 use App\Enum\InquiryStatus;
+use App\Enum\PurchaseOrderProductStatus;
 use App\Event\PurchaseOrderCompletedEvent;
 use App\Exception\BusinessRuleViolationException;
 use App\Exception\InvalidStatusException;
@@ -90,6 +91,7 @@ class PurchaseOrder extends Inquiry
     private array $events = [];
     public function complete(): void
     {
+        $this->assertProductsStatus('completed');
         $this->assertCanModifyEntity('Purchase order', 'complete', InquiryStatus::InProgress);
         $this->status = InquiryStatus::Completed;
 
@@ -115,6 +117,17 @@ class PurchaseOrder extends Inquiry
         $this->events = [];
 
         return $events;
+    }
+
+    public function assertProductsStatus(string $action): void
+    {
+        $hasPendingProducts = $this->purchaseOrderProducts->exists(fn(int $_, PurchaseOrderProduct $purchaseOrderProduct) =>
+            $purchaseOrderProduct->getStatus() === PurchaseOrderProductStatus::Pending
+        );
+
+        if ($hasPendingProducts) {
+            throw BusinessRuleViolationException::forInvalidProductStatus('Purchase order', $action, PurchaseOrderProductStatus::Prepared->label());
+        }
     }
 
     public function assertHasProducts(string $action): void
