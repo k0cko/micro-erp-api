@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Enum\InquiryStatus;
 use App\Enum\PurchaseOrderProductStatus;
+use App\Exception\InvalidStatusException;
 use App\Repository\PurchaseOrderProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -81,6 +82,8 @@ class PurchaseOrderProduct extends InquiryProduct
 
     public function markAsPrepared(): void
     {
+        $this->assertCanPrepare();
+        $this->purchaseOrder->assertCanModifyProduct('prepared', InquiryStatus::InProgress);
         $this->status = PurchaseOrderProductStatus::Prepared;
     }
 
@@ -97,6 +100,13 @@ class PurchaseOrderProduct extends InquiryProduct
     public function markAsCancelled(): void
     {
         $this->status = PurchaseOrderProductStatus::Cancelled;
+    }
+
+    public function assertCanPrepare(): void
+    {
+        if ($this->status !== PurchaseOrderProductStatus::Pending) {
+            throw InvalidStatusException::forInvalidAction('Purchase order product', 'prepared', 'product', [PurchaseOrderProductStatus::Pending->label()]);
+        }
     }
 
     public function getId(): ?int
