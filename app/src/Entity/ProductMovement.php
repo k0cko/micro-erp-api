@@ -38,6 +38,40 @@ class ProductMovement
     #[ORM\Column(enumType: ProductMovementType::class)]
     private ?ProductMovementType $type = null;
 
+    public function __construct(
+        Warehouse $warehouse,
+        Product $product,
+        int $quantity,
+        ProductMovementType $type,
+        ?PurchaseOrderProduct $purchaseOrderProduct,
+        ?DeliveryProduct $deliveryProduct
+    ) {
+        $this->warehouse = $warehouse;
+        $this->product = $product;
+        $this->quantity = $quantity;
+        $this->type = $type;
+        $this->purchaseOrderProduct = $purchaseOrderProduct;
+        $this->deliveryProduct = $deliveryProduct;
+    }
+
+    public static function createForDelivery(
+        Warehouse $warehouse,
+        Product $product,
+        int $quantity,
+        DeliveryProduct $deliveryProduct
+    ): self {
+        return new self($warehouse, $product, $quantity, ProductMovementType::In, null, $deliveryProduct);
+    }
+
+    public static function createForPurchaseOrder(
+        Warehouse $warehouse,
+        Product $product,
+        int $quantity,
+        PurchaseOrderProduct $purchaseOrderProduct
+    ): self {
+        return new self($warehouse, $product, $quantity, ProductMovementType::Out, $purchaseOrderProduct, null);
+    }
+
     public function getId(): ?int
     {
         return $this->id;

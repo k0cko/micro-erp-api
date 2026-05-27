@@ -2,6 +2,7 @@
 
 namespace App\EventListener;
 
+use App\Entity\ProductMovement;
 use App\Enum\PurchaseOrderProductStatus;
 use App\Event\PurchaseOrderCompletedEvent;
 use App\Repository\WarehouseProductRepository;
@@ -39,6 +40,9 @@ final class PurchaseOrderCompletedEventListener
 
             $warehouseProduct->removeQuantity($quantity);
 
+            $productMovement = ProductMovement::createForPurchaseOrder($warehouse, $product, $quantity, $purchaseOrderProduct);
+
+            $this->entityManager->persist($productMovement);
             $this->entityManager->persist($warehouseProduct);
         }
     }

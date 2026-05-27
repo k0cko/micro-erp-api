@@ -2,6 +2,7 @@
 
 namespace App\EventListener;
 
+use App\Entity\ProductMovement;
 use App\Entity\WarehouseProduct;
 use App\Enum\DeliveryProductStatus;
 use App\Event\DeliveryCompletedEvent;
@@ -48,6 +49,9 @@ final class DeliveryCompletedEventListener
                 );
             }
 
+            $productMovement = ProductMovement::createForDelivery($warehouse, $product, $quantity, $deliveryProduct);
+
+            $this->entityManager->persist($productMovement);
             $this->entityManager->persist($warehouseProduct);
         }
     }
