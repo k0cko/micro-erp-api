@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\DTO\Delivery\DeliveryInput;
+use App\Enum\ContractorType;
 use App\Enum\InquiryStatus;
 use App\Event\DeliveryCompletedEvent;
 use App\Exception\BusinessRuleViolationException;
@@ -56,6 +57,8 @@ class Delivery extends Inquiry
 
     public static function create(DeliveryInput $input, User $user, Contractor $contractor, Warehouse $warehouse): self
     {
+        self::assertContractorType($contractor->getType());
+        
         return new self(
             $input->date,
             InquiryStatus::Draft,
@@ -72,6 +75,8 @@ class Delivery extends Inquiry
             'update',
             InquiryStatus::Draft
         );
+        self::assertContractorType($contractor->getType());
+        
         $this->date = $input->date;
         $this->contractor = $contractor;
         $this->warehouse = $warehouse;
@@ -127,6 +132,13 @@ class Delivery extends Inquiry
     {
         if ($this->deliveryProducts->isEmpty()) {
             throw BusinessRuleViolationException::forEmptyProductList('Delivery', $action);
+        }
+    }
+
+    public static function assertContractorType(ContractorType $contractorType): void
+    {
+        if ($contractorType !== ContractorType::Supplier) {
+            throw BusinessRuleViolationException::forInvalidContractorType(ContractorType::Supplier->label());
         }
     }
 

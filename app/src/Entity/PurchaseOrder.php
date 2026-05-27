@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\DTO\PurchaseOrder\PurchaseOrderInput;
+use App\Enum\ContractorType;
 use App\Enum\InquiryStatus;
 use App\Enum\PurchaseOrderProductStatus;
 use App\Event\PurchaseOrderCompletedEvent;
@@ -58,6 +59,8 @@ class PurchaseOrder extends Inquiry
 
     public static function create(PurchaseOrderInput $input, User $user, Contractor $contractor, Warehouse $warehouse): self
     {
+        self::assertContractorType($contractor->getType());
+        
         return new self(
             $input->date,
             InquiryStatus::Draft,
@@ -74,6 +77,8 @@ class PurchaseOrder extends Inquiry
             'update',
             InquiryStatus::Draft
         );
+        self::assertContractorType($contractor->getType());
+        
         $this->date = $input->date;
         $this->contractor = $contractor;
         $this->warehouse = $warehouse;
@@ -141,6 +146,13 @@ class PurchaseOrder extends Inquiry
     {
         if (!$this->isStatusAllowed($allowed)) {
             throw InvalidStatusException::forInvalidAction('Purchase order products', $action, 'purchase order', array_map(fn($status) => $status->label(), $allowed));
+        }
+    }
+
+    public static function assertContractorType(ContractorType $contractorType): void
+    {
+        if ($contractorType !== ContractorType::Client) {
+            throw BusinessRuleViolationException::forInvalidContractorType(ContractorType::Client->label());
         }
     }
 
