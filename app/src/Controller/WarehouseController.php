@@ -54,8 +54,8 @@ final class WarehouseController extends AbstractController
         return $this->json($warehouseResponse, JsonResponse::HTTP_OK);
     }
 
-    #[Route('/{id}/stock', methods: ['GET'])]
-    public function stock(
+    #[Route('/{id}/products', methods: ['GET'])]
+    public function products(
         Warehouse $warehouse
     ): JsonResponse {
         $warehouseProductResponses = $this->listWarehouseStockService->execute($warehouse);
