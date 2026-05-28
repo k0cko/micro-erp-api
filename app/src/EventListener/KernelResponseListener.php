@@ -20,6 +20,10 @@ class KernelResponseListener
             return;
         }
 
+        if ($response->getStatusCode() >= 400) {
+            return;
+        }
+
         try {
             $contentData = json_decode(json: $response->getContent(), associative: true, flags: JSON_THROW_ON_ERROR);
         } catch (\JsonException $e) {
