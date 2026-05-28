@@ -6,8 +6,6 @@ use App\DTO\User\ChangeUserPasswordInput;
 use App\DTO\User\CreateUserInput;
 use App\DTO\User\UpdateUserInput;
 use App\Entity\User;
-use App\Exception\DuplicateResourceException;
-use App\Exception\OldPasswordMismatchException;
 use App\Security\Voter\UserVoter;
 use App\Service\User\ChangeUserPasswordService;
 use App\Service\User\CreateUserService;
@@ -47,8 +45,8 @@ final class UserController extends AbstractController
     {
         $this->denyAccessUnlessGranted(UserVoter::CREATE_SUPER_ADMIN, $input);
 
-        $id = $this->createUserService->execute($input);
-        return $this->json(['id' => $id], JsonResponse::HTTP_CREATED);
+        $userResponse = $this->createUserService->execute($input);
+        return $this->json($userResponse, JsonResponse::HTTP_CREATED);
     }
 
     #[Route('/{id}', methods: ['PUT'])]

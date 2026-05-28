@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\DTO\Contractor\ContractorInput;
 use App\Entity\Contractor;
-use App\Exception\DuplicateResourceException;
 use App\Service\Contractor\CreateContractorService;
 use App\Service\Contractor\DeleteContractorService;
 use App\Service\Contractor\ListContractorService;
@@ -37,8 +36,8 @@ final class ContractorController extends AbstractController
         #[MapRequestPayload] ContractorInput $input,
     ): JsonResponse
     {
-        $id = $this->createContractorService->execute($input);
-        return $this->json(['id' => $id], JsonResponse::HTTP_CREATED);
+        $contractorResponse = $this->createContractorService->execute($input);
+        return $this->json($contractorResponse, JsonResponse::HTTP_CREATED);
     }
 
     #[Route('/{id}', methods: ['PUT'])]

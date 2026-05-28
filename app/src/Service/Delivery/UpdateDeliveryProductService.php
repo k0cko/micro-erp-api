@@ -4,6 +4,8 @@ namespace App\Service\Delivery;
 
 use App\DTO\Delivery\DeliveryProductsInput;
 use App\Entity\Delivery;
+use App\Mapper\Delivery\DeliveryProductResponseMapper;
+use App\DTO\Delivery\DeliveryProductResponse;
 use App\Repository\DeliveryProductRepository;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,6 +19,7 @@ final class UpdateDeliveryProductService
         private readonly EntityManagerInterface $entityManager,
     ) {}
 
+    /** @return DeliveryProductResponse[] */
     public function execute(DeliveryProductsInput $input, Delivery $delivery): array
     {
         $deliveryProducts = [];
@@ -33,7 +36,7 @@ final class UpdateDeliveryProductService
 
             $deliveryProduct->update($deliveryProductInput->quantity);
 
-            $deliveryProducts[] = $deliveryProduct->getId();
+            $deliveryProducts[] = DeliveryProductResponseMapper::map($deliveryProduct);
         }
 
         $this->entityManager->flush();

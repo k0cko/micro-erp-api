@@ -4,6 +4,8 @@ namespace App\Service\PurchaseOrder;
 
 use App\DTO\PurchaseOrder\PurchaseOrderProductsInput;
 use App\Entity\PurchaseOrder;
+use App\Mapper\PurchaseOrder\PurchaseOrderProductResponseMapper;
+use App\DTO\PurchaseOrder\PurchaseOrderProductResponse;
 use App\Repository\ProductRepository;
 use App\Repository\PurchaseOrderProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,6 +19,7 @@ final class UpdatePurchaseOrderProductService
         private readonly EntityManagerInterface $entityManager,
     ) {}
 
+    /** @return PurchaseOrderProductResponse[] */
     public function execute(PurchaseOrderProductsInput $input, PurchaseOrder $purchaseOrder): array
     {
         $purchaseOrderProducts = [];
@@ -33,7 +36,7 @@ final class UpdatePurchaseOrderProductService
 
             $purchaseOrderProduct->update($purchaseOrderProductInput->quantity);
 
-            $purchaseOrderProducts[] = $purchaseOrderProduct->getId();
+            $purchaseOrderProducts[] = PurchaseOrderProductResponseMapper::map($purchaseOrderProduct);
         }
 
         $this->entityManager->flush();

@@ -27,6 +27,6 @@ final class UpdateWarehouseService
 
         $this->entityManager->flush();
 
-        return WarehouseResponseMapper::mapToResponse($warehouse);
+        return WarehouseResponseMapper::map($warehouse);
     }
 }

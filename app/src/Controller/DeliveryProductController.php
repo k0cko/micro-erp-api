@@ -38,8 +38,8 @@ final class DeliveryProductController extends AbstractController
         #[MapRequestPayload] DeliveryProductsInput $input,
         Delivery $delivery
     ): JsonResponse {
-        $ids = $this->createDeliveryProductService->execute($input, $delivery);
-        return $this->json($ids, JsonResponse::HTTP_CREATED);
+        $deliveryProductsResponse = $this->createDeliveryProductService->execute($input, $delivery);
+        return $this->json($deliveryProductsResponse, JsonResponse::HTTP_CREATED);
     }
 
     #[Route('', methods: ['PUT'])]
@@ -47,8 +47,8 @@ final class DeliveryProductController extends AbstractController
         #[MapRequestPayload] DeliveryProductsInput $input,
         Delivery $delivery
     ): JsonResponse {
-        $ids = $this->updateDeliveryProductService->execute($input, $delivery);
-        return $this->json($ids, JsonResponse::HTTP_CREATED);
+        $deliveryProductsResponse = $this->updateDeliveryProductService->execute($input, $delivery);
+        return $this->json($deliveryProductsResponse, JsonResponse::HTTP_CREATED);
     }
 
     #[Route('/{deliveryProductId}', methods: ['DELETE'])]

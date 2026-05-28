@@ -44,8 +44,8 @@ final class PurchaseOrderController extends AbstractController
         #[MapRequestPayload] PurchaseOrderInput $input,
         #[CurrentUser] User $user
     ): JsonResponse {
-        $id = $this->createPurchaseOrderService->execute($input, $user);
-        return $this->json(['id' => $id], JsonResponse::HTTP_CREATED);
+        $purchaseOrderResponse = $this->createPurchaseOrderService->execute($input, $user);
+        return $this->json($purchaseOrderResponse, JsonResponse::HTTP_CREATED);
     }
 
     #[Route('/{id}', methods: ['PUT'])]

@@ -41,8 +41,8 @@ final class PurchaseOrderProductController extends AbstractController
         #[MapRequestPayload] PurchaseOrderProductsInput $input,
         PurchaseOrder $purchaseOrder
     ): JsonResponse {
-        $ids = $this->createPurchaseOrderProductService->execute($input, $purchaseOrder);
-        return $this->json($ids, JsonResponse::HTTP_CREATED);
+        $purchaseOrderProductResponse = $this->createPurchaseOrderProductService->execute($input, $purchaseOrder);
+        return $this->json($purchaseOrderProductResponse, JsonResponse::HTTP_CREATED);
     }
 
     #[IsGranted('ROLE_ADMIN')]

@@ -17,7 +17,7 @@ final class ListUserService
     {
         $users = [];
         foreach ($this->userRepository->findAll() as $user) {
-            $users[] = UserResponseMapper::mapToResponse($user);
+            $users[] = UserResponseMapper::map($user);
         }
 
         return $users; 

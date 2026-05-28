@@ -6,6 +6,8 @@ use App\DTO\PurchaseOrder\PurchaseOrderProductsInput;
 use App\Entity\PurchaseOrder;
 use App\Entity\PurchaseOrderProduct;
 use App\Exception\DuplicateResourceException;
+use App\Mapper\PurchaseOrder\PurchaseOrderProductResponseMapper;
+use App\DTO\PurchaseOrder\PurchaseOrderProductResponse;
 use App\Repository\ProductRepository;
 use App\Repository\PurchaseOrderProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -19,6 +21,7 @@ final class CreatePurchaseOrderProductService
         private readonly EntityManagerInterface $entityManager,
     ) {}
 
+    /** @return PurchaseOrderProductResponse[] */
     public function execute(PurchaseOrderProductsInput $input, PurchaseOrder $purchaseOrder): array
     {
         $purchaseOrderProducts = [];
@@ -38,11 +41,11 @@ final class CreatePurchaseOrderProductService
 
             $this->entityManager->persist($purchaseOrderProduct);
 
-            $purchaseOrderProducts[] = $purchaseOrderProduct;
+            $purchaseOrderProducts[] = PurchaseOrderProductResponseMapper::map($purchaseOrderProduct);
         }
 
         $this->entityManager->flush();
 
-        return array_map(fn($pop) => $pop->getId(), $purchaseOrderProducts);
+        return $purchaseOrderProducts;
     }
 }

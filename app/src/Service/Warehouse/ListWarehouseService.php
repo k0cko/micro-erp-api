@@ -17,7 +17,7 @@ final class ListWarehouseService
     {
         $warehouseResponses = [];
         foreach ($this->warehouseRepository->findAll() as $warehouse) {
-            $warehouseResponses[] = WarehouseResponseMapper::mapToResponse($warehouse);
+            $warehouseResponses[] = WarehouseResponseMapper::map($warehouse);
         }
 
         return $warehouseResponses;

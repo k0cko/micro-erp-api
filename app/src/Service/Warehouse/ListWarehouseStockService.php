@@ -14,7 +14,7 @@ class ListWarehouseStockService
     {
         $warehouseProductResponse = [];
         foreach ($warehouse->getWarehouseProducts() as $warehouseProduct) {
-            $warehouseProductResponse[] = WarehouseProductResponseMapper::mapToResponse($warehouseProduct);
+            $warehouseProductResponse[] = WarehouseProductResponseMapper::map($warehouseProduct);
         }
 
         return $warehouseProductResponse;

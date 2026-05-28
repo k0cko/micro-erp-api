@@ -7,7 +7,7 @@ use App\Entity\Product;
 
 final readonly class ProductResponseMapper
 {
-    public static function mapToResponse(Product $product): ProductResponse
+    public static function map(Product $product): ProductResponse
     {
         return new ProductResponse(
             id: $product->getId(),

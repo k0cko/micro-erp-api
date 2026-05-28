@@ -28,6 +28,6 @@ final class UpdateContractorService
 
         $this->entityManager->flush();
 
-        return ContractorResponseMapper::mapToResponse($contractor);
+        return ContractorResponseMapper::map($contractor);
     }
 }

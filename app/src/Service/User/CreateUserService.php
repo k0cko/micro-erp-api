@@ -3,9 +3,11 @@
 namespace App\Service\User;
 
 use App\DTO\User\CreateUserInput;
+use App\DTO\User\UserResponse;
 use App\Entity\User;
 use App\Enum\UserRole;
 use App\Exception\DuplicateResourceException;
+use App\Mapper\User\UserResponseMapper;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -19,7 +21,7 @@ final class CreateUserService
         private readonly UserPasswordHasherInterface $passwordHasher,
     ) {}
 
-    public function execute(CreateUserInput $input): int
+    public function execute(CreateUserInput $input): UserResponse
     {
         if ($this->userRepository->existsByUsername($input->username)) {
             throw DuplicateResourceException::forField('User', 'username', $input->username);
@@ -33,6 +35,6 @@ final class CreateUserService
         $this->entityManager->persist($user);
         $this->entityManager->flush();
 
-        return $user->getId();
+        return UserResponseMapper::map($user);
     }
 }

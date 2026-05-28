@@ -27,6 +27,6 @@ final class UpdateProductService
 
         $this->entityManager->flush();
 
-        return ProductResponseMapper::mapToResponse($product);
+        return ProductResponseMapper::map($product);
     }
 }

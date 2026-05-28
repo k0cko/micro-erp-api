@@ -7,7 +7,7 @@ use App\Entity\ProductMovement;
 
 final readonly class ProductMovementResponseMapper
 {
-    public static function mapToResponse(ProductMovement $productMovement): ProductMovementResponse
+    public static function map(ProductMovement $productMovement): ProductMovementResponse
     {
         return new ProductMovementResponse(
             id: $productMovement->getId(),

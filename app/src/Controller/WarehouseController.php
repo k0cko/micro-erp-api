@@ -39,8 +39,8 @@ final class WarehouseController extends AbstractController
         #[MapRequestPayload] WarehouseInput $input,
     ): JsonResponse
     {
-        $id = $this->createWarehouseService->execute($input);
-        return $this->json(['id' => $id], JsonResponse::HTTP_CREATED);
+        $warehouseResponse = $this->createWarehouseService->execute($input);
+        return $this->json($warehouseResponse, JsonResponse::HTTP_CREATED);
     }
 
     #[IsGranted('ROLE_ADMIN')]

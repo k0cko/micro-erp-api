@@ -45,8 +45,8 @@ final class DeliveryController extends AbstractController
         #[MapRequestPayload] DeliveryInput $input,
         #[CurrentUser] User $user
     ): JsonResponse {
-        $id = $this->createDeliveryService->execute($input, $user);
-        return $this->json(['id' => $id], JsonResponse::HTTP_CREATED);
+        $deliveryResponse = $this->createDeliveryService->execute($input, $user);
+        return $this->json($deliveryResponse, JsonResponse::HTTP_CREATED);
     }
 
     #[Route('/{id}', methods: ['PUT'])]

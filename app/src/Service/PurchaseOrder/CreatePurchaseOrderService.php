@@ -3,8 +3,10 @@
 namespace App\Service\PurchaseOrder;
 
 use App\DTO\PurchaseOrder\PurchaseOrderInput;
+use App\DTO\PurchaseOrder\PurchaseOrderResponse;
 use App\Entity\PurchaseOrder;
 use App\Entity\User;
+use App\Mapper\PurchaseOrder\PurchaseOrderResponseMapper;
 use App\Repository\ContractorRepository;
 use App\Repository\WarehouseRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -18,7 +20,7 @@ final class CreatePurchaseOrderService
         private readonly EntityManagerInterface $entityManager,
     ) {}
 
-    public function execute(PurchaseOrderInput $input, User $user): int
+    public function execute(PurchaseOrderInput $input, User $user): PurchaseOrderResponse
     {
         $contractor = $this->contractorRepository->find($input->contractorId) ?? throw new NotFoundHttpException('Contractor not found.');
         $warehouse = $this->warehouseRepository->find($input->warehouseId) ?? throw new NotFoundHttpException('Warehouse not found.');
@@ -28,6 +30,6 @@ final class CreatePurchaseOrderService
         $this->entityManager->persist($purchaseOrder);
         $this->entityManager->flush();
 
-        return $purchaseOrder->getId();
+        return PurchaseOrderResponseMapper::map($purchaseOrder);
     }
 }

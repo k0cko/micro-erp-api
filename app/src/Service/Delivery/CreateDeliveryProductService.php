@@ -6,6 +6,8 @@ use App\DTO\Delivery\DeliveryProductsInput;
 use App\Entity\Delivery;
 use App\Entity\DeliveryProduct;
 use App\Exception\DuplicateResourceException;
+use App\Mapper\Delivery\DeliveryProductResponseMapper;
+use App\DTO\Delivery\DeliveryProductResponse;
 use App\Repository\DeliveryProductRepository;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -19,6 +21,7 @@ final class CreateDeliveryProductService
         private readonly EntityManagerInterface $entityManager,
     ) {}
 
+    /** @return DeliveryProductResponse[] */
     public function execute(DeliveryProductsInput $input, Delivery $delivery): array
     {
         $deliveryProducts = [];
@@ -38,11 +41,11 @@ final class CreateDeliveryProductService
 
             $this->entityManager->persist($deliveryProduct);
 
-            $deliveryProducts[] = $deliveryProduct;
+            $deliveryProducts[] = DeliveryProductResponseMapper::map($deliveryProduct);
         }
 
         $this->entityManager->flush();
 
-        return array_map(fn($dp) => $dp->getId(), $deliveryProducts);
+        return $deliveryProducts;
     }
 }

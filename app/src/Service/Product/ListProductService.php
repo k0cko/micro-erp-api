@@ -17,7 +17,7 @@ final class ListProductService
     {
         $productResponses = [];
         foreach ($this->productRepository->findAll() as $product) {
-            $productResponses[] = ProductResponseMapper::mapToResponse($product);
+            $productResponses[] = ProductResponseMapper::map($product);
         }
 
         return $productResponses;

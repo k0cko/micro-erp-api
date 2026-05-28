@@ -14,7 +14,7 @@ class ListProductMovementService
     {
         $productMovementResponse = [];
         foreach ($warehouse->getProductMovements() as $productMovement) {
-            $productMovementResponse[] = ProductMovementResponseMapper::mapToResponse($productMovement);
+            $productMovementResponse[] = ProductMovementResponseMapper::map($productMovement);
         }
 
         return $productMovementResponse;

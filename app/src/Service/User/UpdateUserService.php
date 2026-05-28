@@ -20,6 +20,6 @@ final class UpdateUserService
 
         $this->entityManager->flush();
 
-        return UserResponseMapper::mapToResponse($user);
+        return UserResponseMapper::map($user);
     }
 }

@@ -5,6 +5,8 @@ namespace App\Service\Product;
 use App\DTO\Product\ProductInput;
 use App\Entity\Product;
 use App\Exception\DuplicateResourceException;
+use App\Mapper\Product\ProductResponseMapper;
+use App\DTO\Product\ProductResponse;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -15,7 +17,7 @@ final class CreateProductService
         private readonly EntityManagerInterface $entityManager,
     ) {}
 
-    public function execute(ProductInput $input): int
+    public function execute(ProductInput $input): ProductResponse
     {
         if ($this->productRepository->existsByName($input->name)) {
             throw DuplicateResourceException::forField('Product', 'name', $input->name);
@@ -26,7 +28,7 @@ final class CreateProductService
         $this->entityManager->persist($product);
         $this->entityManager->flush();
         
-        return $product->getId();
+        return ProductResponseMapper::map($product);
     }
 
 }

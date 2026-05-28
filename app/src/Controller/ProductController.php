@@ -4,8 +4,6 @@ namespace App\Controller;
 
 use App\DTO\Product\ProductInput;
 use App\Entity\Product;
-use App\Exception\DuplicateResourceException;
-use App\Exception\ResourceInUseException;
 use App\Service\Product\CreateProductService;
 use App\Service\Product\DeleteProductService;
 use App\Service\Product\ListProductService;
@@ -39,8 +37,8 @@ final class ProductController extends AbstractController
         #[MapRequestPayload] ProductInput $input,
     ): JsonResponse
     {
-        $id = $this->createProductService->execute($input);
-        return $this->json(['id' => $id], JsonResponse::HTTP_CREATED);
+        $productResponse = $this->createProductService->execute($input);
+        return $this->json($productResponse, JsonResponse::HTTP_CREATED);
     }
 
     #[Route('/{id}', methods: ['PUT'])]

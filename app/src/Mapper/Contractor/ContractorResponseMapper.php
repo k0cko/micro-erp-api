@@ -7,7 +7,7 @@ use App\Entity\Contractor;
 
 final readonly class ContractorResponseMapper
 {
-    public static function mapToResponse(Contractor $contractor): ContractorResponse
+    public static function map(Contractor $contractor): ContractorResponse
     {
         return new ContractorResponse(
             id: $contractor->getId(),

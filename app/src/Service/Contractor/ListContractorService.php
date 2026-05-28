@@ -17,7 +17,7 @@ final class ListContractorService
     {
         $contractorResponses = [];
         foreach ($this->contractorRepository->findAll() as $contractor) {
-            $contractorResponses[] = ContractorResponseMapper::mapToResponse($contractor);
+            $contractorResponses[] = ContractorResponseMapper::map($contractor);
         }
 
         return $contractorResponses;

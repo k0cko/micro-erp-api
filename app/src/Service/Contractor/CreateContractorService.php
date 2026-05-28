@@ -3,8 +3,10 @@
 namespace App\Service\Contractor;
 
 use App\DTO\Contractor\ContractorInput;
+use App\DTO\Contractor\ContractorResponse;
 use App\Entity\Contractor;
 use App\Exception\DuplicateResourceException;
+use App\Mapper\Contractor\ContractorResponseMapper;
 use App\Repository\ContractorRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -15,7 +17,7 @@ final class CreateContractorService
         private readonly EntityManagerInterface $entityManager,
     ) {}
 
-    public function execute(ContractorInput $input): int
+    public function execute(ContractorInput $input): ContractorResponse
     {
         if ($this->contractorRepository->existsByName($input->name)) {
             throw DuplicateResourceException::forField('Contractor', 'name', $input->name);
@@ -26,6 +28,6 @@ final class CreateContractorService
         $this->entityManager->persist($contractor);
         $this->entityManager->flush();
 
-        return $contractor->getId();
+        return ContractorResponseMapper::map($contractor);
     }
 }
