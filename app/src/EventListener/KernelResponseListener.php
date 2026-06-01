@@ -24,6 +24,10 @@ class KernelResponseListener
             return;
         }
 
+        if ($response->headers->has('X-Envelope-Handled')) {
+            return;
+        }
+
         try {
             $contentData = json_decode(json: $response->getContent(), associative: true, flags: JSON_THROW_ON_ERROR);
         } catch (\JsonException $e) {
