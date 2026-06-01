@@ -2,25 +2,27 @@
 
 namespace App\Service\PurchaseOrder;
 
-use App\DTO\PurchaseOrder\PurchaseOrderProductResponse;
+use App\DTO\Pagination\PaginatedResult;
 use App\Entity\PurchaseOrder;
+use App\Entity\PurchaseOrderProduct;
 use App\Mapper\PurchaseOrder\PurchaseOrderProductResponseMapper;
 use App\Repository\PurchaseOrderProductRepository;
+use App\Service\Pagination\PagePaginatorService;
 
 final class ListPurchaseOrderProductService
 {
     public function __construct(
-        private readonly PurchaseOrderProductRepository $purchaseOrderProductRepository
+        private readonly PurchaseOrderProductRepository $purchaseOrderProductRepository,
+        private readonly PagePaginatorService $paginator,
     ) {}
 
-    /** @return PurchaseOrderProductResponse[] */
-    public function execute(PurchaseOrder $purchaseOrder)
+    public function execute(PurchaseOrder $purchaseOrder, int $page, int $limit): PaginatedResult
     {
-        $purchaseOrderProducts = [];
-        foreach ($this->purchaseOrderProductRepository->findBy(['purchaseOrder' => $purchaseOrder]) as $purchaseOrderProduct) {
-            $purchaseOrderProducts[] = PurchaseOrderProductResponseMapper::map($purchaseOrderProduct);
-        }
-
-        return $purchaseOrderProducts;
+        return $this->paginator->paginate(
+            $this->purchaseOrderProductRepository->createPaginatedQueryBuilder($purchaseOrder),
+            fn(PurchaseOrderProduct $purchaseOrderProduct) => PurchaseOrderProductResponseMapper::map($purchaseOrderProduct),
+            $page,
+            $limit,
+        );
     }
 }

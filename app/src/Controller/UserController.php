@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\DTO\Pagination\PaginationQuery;
 use App\DTO\User\ChangeUserPasswordInput;
 use App\DTO\User\CreateUserInput;
 use App\DTO\User\UpdateUserInput;
@@ -12,8 +13,8 @@ use App\Service\User\CreateUserService;
 use App\Service\User\DeleteUserService;
 use App\Service\User\ListUserService;
 use App\Service\User\UpdateUserService;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
@@ -21,7 +22,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/users')]
 #[IsGranted('ROLE_WORKER')]
-final class UserController extends AbstractController
+final class UserController extends AbstractApiController
 {
     public function __construct(
         private readonly CreateUserService $createUserService,
@@ -32,9 +33,11 @@ final class UserController extends AbstractController
     ) {}
 
     #[Route('', methods: ['GET'])]
-    public function index(): JsonResponse
-    {
-        return $this->json($this->listUserService->execute(), JsonResponse::HTTP_OK);
+    public function index(
+        #[MapQueryString] PaginationQuery $query,
+    ): JsonResponse {
+        $result = $this->listUserService->execute($query->page, $query->limit);
+        return $this->jsonPaginated($result);
     }
 
     #[Route('', methods: ['POST'])]

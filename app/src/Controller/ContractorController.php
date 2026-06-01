@@ -3,20 +3,21 @@
 namespace App\Controller;
 
 use App\DTO\Contractor\ContractorInput;
+use App\DTO\Pagination\PaginationQuery;
 use App\Entity\Contractor;
 use App\Service\Contractor\CreateContractorService;
 use App\Service\Contractor\DeleteContractorService;
 use App\Service\Contractor\ListContractorService;
 use App\Service\Contractor\UpdateContractorService;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/contractors')]
 #[IsGranted('ROLE_ADMIN')]
-final class ContractorController extends AbstractController
+final class ContractorController extends AbstractApiController
 {
     public function __construct(
         private readonly ListContractorService $listContractorService,
@@ -26,9 +27,11 @@ final class ContractorController extends AbstractController
     ) {}
 
     #[Route('', methods: ['GET'])]
-    public function index(): JsonResponse
-    {
-        return $this->json($this->listContractorService->execute(), JsonResponse::HTTP_OK);
+    public function index(
+        #[MapQueryString] PaginationQuery $query,
+    ): JsonResponse {
+        $result = $this->listContractorService->execute($query->page, $query->limit);
+        return $this->jsonPaginated($result);
     }
 
     #[Route('', methods: ['POST'])]

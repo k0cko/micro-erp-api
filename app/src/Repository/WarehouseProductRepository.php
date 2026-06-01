@@ -2,8 +2,10 @@
 
 namespace App\Repository;
 
+use App\Entity\Warehouse;
 use App\Entity\WarehouseProduct;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -14,6 +16,14 @@ class WarehouseProductRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, WarehouseProduct::class);
+    }
+
+    public function createPaginatedQueryBuilder(Warehouse $warehouse): QueryBuilder
+    {
+        return $this->createQueryBuilder('wp')
+            ->andWhere('wp.warehouse = :warehouse')
+            ->setParameter('warehouse', $warehouse)
+            ->orderBy('wp.id', 'DESC');
     }
 
     //    /**

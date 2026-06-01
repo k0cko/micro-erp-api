@@ -2,21 +2,22 @@
 
 namespace App\Controller;
 
+use App\DTO\Pagination\PaginationQuery;
 use App\DTO\Product\ProductInput;
 use App\Entity\Product;
 use App\Service\Product\CreateProductService;
 use App\Service\Product\DeleteProductService;
 use App\Service\Product\ListProductService;
 use App\Service\Product\UpdateProductService;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/products')]
 #[IsGranted('ROLE_ADMIN')]
-final class ProductController extends AbstractController
+final class ProductController extends AbstractApiController
 {
     public function __construct(
         private readonly CreateProductService $createProductService,
@@ -27,9 +28,11 @@ final class ProductController extends AbstractController
 
     #[Route('', methods: ['GET'])]
     #[IsGranted('ROLE_WORKER')]
-    public function index(): JsonResponse
-    {
-        return $this->json($this->listProductService->execute(), JsonResponse::HTTP_OK);
+    public function index(
+        #[MapQueryString] PaginationQuery $query,
+    ): JsonResponse {
+        $result = $this->listProductService->execute($query->page, $query->limit);
+        return $this->jsonPaginated($result);
     }
 
     #[Route('', methods: ['POST'])]

@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Delivery;
 use App\Entity\DeliveryProduct;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -31,6 +32,14 @@ class DeliveryProductRepository extends ServiceEntityRepository
             ->setParameter('excludeProductIds', $excludeProductIds)
             ->getQuery()
             ->execute();
+    }
+     
+    public function createPaginatedQueryBuilder(Delivery $delivery): QueryBuilder
+    {
+        return $this->createQueryBuilder('dp')
+            ->andWhere('dp.delivery = :delivery')
+            ->setParameter('delivery', $delivery)
+            ->orderBy('dp.id', 'DESC');
     }
 
     //    /**

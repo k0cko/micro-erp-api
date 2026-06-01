@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\DTO\Pagination\PaginationQuery;
 use App\DTO\PurchaseOrder\PurchaseOrderProductsInput;
 use App\Entity\PurchaseOrder;
 use App\Entity\PurchaseOrderProduct;
@@ -11,15 +12,15 @@ use App\Service\PurchaseOrder\ListPurchaseOrderProductService;
 use App\Service\PurchaseOrder\PreparePurchaseOrderProductService;
 use App\Service\PurchaseOrder\UpdatePurchaseOrderProductService;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/purchase_orders/{id}/products')]
 #[IsGranted('ROLE_WORKER')]
-final class PurchaseOrderProductController extends AbstractController
+final class PurchaseOrderProductController extends AbstractApiController
 {
     public function __construct(
         private readonly ListPurchaseOrderProductService $listPurchaseOrderProductService,
@@ -30,9 +31,12 @@ final class PurchaseOrderProductController extends AbstractController
     ) {}
 
     #[Route('', methods: ['GET'])]
-    public function index(PurchaseOrder $purchaseOrder): JsonResponse
-    {
-        return $this->json($this->listPurchaseOrderProductService->execute($purchaseOrder), JsonResponse::HTTP_OK);
+    public function index(
+        PurchaseOrder $purchaseOrder,
+        #[MapQueryString] PaginationQuery $query,
+    ): JsonResponse {
+        $result = $this->listPurchaseOrderProductService->execute($purchaseOrder, $query->page, $query->limit);
+        return $this->jsonPaginated($result);
     }
 
     #[IsGranted('ROLE_ADMIN')]

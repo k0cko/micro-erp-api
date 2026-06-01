@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\PurchaseOrder;
 use App\Entity\PurchaseOrderProduct;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -31,6 +32,14 @@ class PurchaseOrderProductRepository extends ServiceEntityRepository
             ->setParameter('excludeProductIds', $excludeProductIds)
             ->getQuery()
             ->execute();
+    }
+
+    public function createPaginatedQueryBuilder(PurchaseOrder $purchaseOrder): QueryBuilder
+    {
+        return $this->createQueryBuilder('pop')
+            ->andWhere('pop.purchaseOrder = :purchaseOrder')
+            ->setParameter('purchaseOrder', $purchaseOrder)
+            ->orderBy('pop.id', 'DESC');
     }
 
 //    /**

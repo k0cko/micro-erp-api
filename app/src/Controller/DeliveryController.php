@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\DTO\Delivery\DeliveryInput;
+use App\DTO\Pagination\PaginationQuery;
 use App\Entity\Delivery;
 use App\Entity\User;
 use App\Service\Delivery\CompleteDeliveryService;
@@ -12,8 +13,8 @@ use App\Service\Delivery\ListDeliveryService;
 use App\Service\Delivery\UpdateDeliveryService;
 use App\Service\Delivery\StartDeliveryService;
 use App\Service\Delivery\CancelDeliveryService;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
@@ -21,7 +22,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/deliveries')]
 #[IsGranted('ROLE_ADMIN')]
-final class DeliveryController extends AbstractController
+final class DeliveryController extends AbstractApiController
 {
     public function __construct(
         private readonly ListDeliveryService $listDeliveryService,
@@ -35,9 +36,11 @@ final class DeliveryController extends AbstractController
 
     #[Route('', methods: ['GET'])]
     #[IsGranted('ROLE_WORKER')]
-    public function index(): JsonResponse
-    {
-        return $this->json($this->listDeliveryService->execute(), JsonResponse::HTTP_OK);
+    public function index(
+        #[MapQueryString] PaginationQuery $query,
+    ): JsonResponse {
+        $result = $this->listDeliveryService->execute($query->page, $query->limit);
+        return $this->jsonPaginated($result);
     }
 
     #[Route('', methods: ['POST'])]

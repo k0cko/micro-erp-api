@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\DTO\Pagination\PaginationQuery;
 use App\DTO\Warehouse\WarehouseInput;
 use App\Entity\Warehouse;
 use App\Service\Warehouse\CreateWarehouseService;
@@ -9,15 +10,15 @@ use App\Service\Warehouse\ListWarehouseService;
 use App\Service\Warehouse\UpdateWarehouseService;
 use App\Service\Warehouse\DeleteWarehouseService;
 use App\Service\Warehouse\ListWarehouseStockService;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/warehouses')]
 #[IsGranted('ROLE_WORKER')]
-final class WarehouseController extends AbstractController
+final class WarehouseController extends AbstractApiController
 {
     public function __construct(
         private readonly ListWarehouseService $listWarehouseService,
@@ -28,9 +29,11 @@ final class WarehouseController extends AbstractController
     ) {}
 
     #[Route('', methods: ['GET'])]
-    public function index(): JsonResponse
-    {
-        return $this->json($this->listWarehouseService->execute(), JsonResponse::HTTP_OK);
+    public function index(
+        #[MapQueryString] PaginationQuery $query,
+    ): JsonResponse {
+        $result = $this->listWarehouseService->execute($query->page, $query->limit);
+        return $this->jsonPaginated($result);
     }
 
     #[IsGranted('ROLE_ADMIN')]
@@ -56,11 +59,11 @@ final class WarehouseController extends AbstractController
 
     #[Route('/{id}/products', methods: ['GET'])]
     public function products(
-        Warehouse $warehouse
+        Warehouse $warehouse,
+        #[MapQueryString] PaginationQuery $query,
     ): JsonResponse {
-        $warehouseProductResponses = $this->listWarehouseStockService->execute($warehouse);
-
-        return $this->json($warehouseProductResponses, JsonResponse::HTTP_OK);
+        $result = $this->listWarehouseStockService->execute($warehouse, $query->page, $query->limit);
+        return $this->jsonPaginated($result);
     }
 
     #[IsGranted('ROLE_ADMIN')]

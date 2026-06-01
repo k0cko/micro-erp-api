@@ -3,8 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\User;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
-use Override;
 use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -58,6 +58,12 @@ class UserRepository extends SoftDeleteRepository implements PasswordUpgraderInt
                 ->setParameter('username', $identifier)
                 ->getQuery()
                 ->getOneOrNullResult());
+    }
+
+    public function createPaginatedQueryBuilder(): QueryBuilder
+    {
+        return $this->createQueryBuilder('u')
+            ->orderBy('u.id', 'DESC');
     }
 
     //    /**

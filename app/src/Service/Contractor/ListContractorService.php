@@ -2,25 +2,26 @@
 
 namespace App\Service\Contractor;
 
-use App\DTO\Contractor\ContractorResponse;
+use App\DTO\Pagination\PaginatedResult;
+use App\Entity\Contractor;
 use App\Mapper\Contractor\ContractorResponseMapper;
 use App\Repository\ContractorRepository;
+use App\Service\Pagination\PagePaginatorService;
 
 final class ListContractorService
 {
     public function __construct(
         private readonly ContractorRepository $contractorRepository,
+        private readonly PagePaginatorService $paginator,
     ) {}
 
-    /** @return ContractorResponse[] */
-    public function execute(): array
+    public function execute(int $page, int $limit): PaginatedResult
     {
-        $contractorResponses = [];
-        foreach ($this->contractorRepository->findAll() as $contractor) {
-            $contractorResponses[] = ContractorResponseMapper::map($contractor);
-        }
-
-        return $contractorResponses;
+        return $this->paginator->paginate(
+            $this->contractorRepository->createPaginatedQueryBuilder(),
+            fn(Contractor $contractor) => ContractorResponseMapper::map($contractor),
+            $page,
+            $limit,
+        );
     }
-
 }

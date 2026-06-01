@@ -2,24 +2,26 @@
 
 namespace App\Service\Delivery;
 
-use App\DTO\Delivery\DeliveryResponse;
+use App\DTO\Pagination\PaginatedResult;
+use App\Entity\Delivery;
 use App\Mapper\Delivery\DeliveryResponseMapper;
 use App\Repository\DeliveryRepository;
+use App\Service\Pagination\PagePaginatorService;
 
 final class ListDeliveryService
 {
     public function __construct(
-        private readonly DeliveryRepository $deliveryRepository
+        private readonly DeliveryRepository $deliveryRepository,
+        private readonly PagePaginatorService $paginator,
     ) {}
 
-    /** @return DeliveryResponse[] */
-    public function execute()
+    public function execute(int $page, int $limit): PaginatedResult
     {
-        $deliveries = [];
-        foreach ($this->deliveryRepository->findAll() as $delivery) {
-            $deliveries[] = DeliveryResponseMapper::map($delivery);
-        }
-
-        return $deliveries;
+        return $this->paginator->paginate(
+            $this->deliveryRepository->createPaginatedQueryBuilder(),
+            fn(Delivery $delivery) => DeliveryResponseMapper::map($delivery),
+            $page,
+            $limit,
+        );
     }
 }

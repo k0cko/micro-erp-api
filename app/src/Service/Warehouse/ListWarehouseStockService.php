@@ -2,21 +2,27 @@
 
 namespace App\Service\Warehouse;
 
-use App\DTO\Warehouse\WarehouseProductResponse;
+use App\DTO\Pagination\PaginatedResult;
 use App\Entity\Warehouse;
+use App\Entity\WarehouseProduct;
 use App\Mapper\Warehouse\WarehouseProductResponseMapper;
+use App\Repository\WarehouseProductRepository;
+use App\Service\Pagination\PagePaginatorService;
 
-class ListWarehouseStockService
+final class ListWarehouseStockService
 {
- 
-    /** @return WarehouseProductResponse[] */
-    public function execute(Warehouse $warehouse): array
-    {
-        $warehouseProductResponse = [];
-        foreach ($warehouse->getWarehouseProducts() as $warehouseProduct) {
-            $warehouseProductResponse[] = WarehouseProductResponseMapper::map($warehouseProduct);
-        }
+    public function __construct(
+        private readonly WarehouseProductRepository $warehouseProductRepository,
+        private readonly PagePaginatorService $paginator,
+    ) {}
 
-        return $warehouseProductResponse;
+    public function execute(Warehouse $warehouse, int $page, int $limit): PaginatedResult
+    {
+        return $this->paginator->paginate(
+            $this->warehouseProductRepository->createPaginatedQueryBuilder($warehouse),
+            fn(WarehouseProduct $warehouseProduct) => WarehouseProductResponseMapper::map($warehouseProduct),
+            $page,
+            $limit,
+        );
     }
 }

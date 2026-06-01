@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Warehouse;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 class WarehouseRepository extends SoftDeleteRepository
@@ -29,6 +30,12 @@ class WarehouseRepository extends SoftDeleteRepository
         return $query
             ->getQuery()
             ->getOneOrNullResult() !== null;
+    }
+
+    public function createPaginatedQueryBuilder(): QueryBuilder
+    {
+        return $this->createQueryBuilder('w')
+            ->orderBy('w.id', 'DESC');
     }
 
     //    /**

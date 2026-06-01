@@ -2,25 +2,26 @@
 
 namespace App\Service\Product;
 
+use App\DTO\Pagination\PaginatedResult;
 use App\Mapper\Product\ProductResponseMapper;
 use App\Repository\ProductRepository;
-use App\DTO\Product\ProductResponse;
+use App\Entity\Product;
+use App\Service\Pagination\PagePaginatorService;
 
 final class ListProductService
 {
     public function __construct(
         private readonly ProductRepository $productRepository,
+        private readonly PagePaginatorService $paginator,
     ) {}
 
-    /** @return ProductResponse[] */
-    public function execute(): array
+    public function execute(int $page, int $limit): PaginatedResult
     {
-        $productResponses = [];
-        foreach ($this->productRepository->findAll() as $product) {
-            $productResponses[] = ProductResponseMapper::map($product);
-        }
-
-        return $productResponses;
+        return $this->paginator->paginate(
+            $this->productRepository->createPaginatedQueryBuilder(),
+            fn(Product $product) => ProductResponseMapper::map($product),
+            $page,
+            $limit,
+        );
     }
-
 }

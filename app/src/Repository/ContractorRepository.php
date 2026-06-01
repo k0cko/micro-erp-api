@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Contractor;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 class ContractorRepository extends SoftDeleteRepository
@@ -29,6 +30,12 @@ class ContractorRepository extends SoftDeleteRepository
         return $query
             ->getQuery()
             ->getOneOrNullResult() !== null;
+    }
+
+    public function createPaginatedQueryBuilder(): QueryBuilder
+    {
+        return $this->createQueryBuilder('c')
+            ->orderBy('c.id', 'DESC');
     }
 
 //    /**
