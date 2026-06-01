@@ -56,7 +56,6 @@ An interactive [Bruno](https://www.usebruno.com/) collection is included in the 
 
 **In progress / coming next:**
 
-* Stock management (warehouse quantities updated on inquiry completion)
 * JWT token refresh
 * Functional tests
 
@@ -66,7 +65,7 @@ An interactive [Bruno](https://www.usebruno.com/) collection is included in the 
 * Audit log (created_by / updated_by)
 * Login rate limiting
 * Delivery / order imports
-* Pagination and filtering (when frontend is started)
+* Filtering (when frontend is started)
 * React frontend
 
 ## Known limitations
