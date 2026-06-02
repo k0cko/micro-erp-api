@@ -3,8 +3,8 @@
 namespace App\Command;
 
 use App\Entity\User;
-use App\Enum\UserRole;
 use App\Repository\UserRepository;
+use App\Service\User\PasswordHasher;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\Argument;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -14,7 +14,6 @@ use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 #[AsCommand(
     name: 'app:create-super-admin',
@@ -26,7 +25,7 @@ class CreateSuperAdminCommand
     public function __construct(
         private readonly UserRepository $userRepository,
         private readonly EntityManagerInterface $entityManager,
-        private readonly UserPasswordHasherInterface $passwordHasher,
+        private readonly PasswordHasher $passwordHasher,
     ){}
 
     public function __invoke(
@@ -87,9 +86,7 @@ class CreateSuperAdminCommand
             return ConsoleCommand::SUCCESS;
         }
 
-        /** @todo Avoid "limbo" object by extracting a PasswordHasher service wrapper */
-        $hashedPassword = $this->passwordHasher->hashPassword(new User('', '', '', '', UserRole::SuperAdmin), $password);
-
+        $hashedPassword = $this->passwordHasher->hash($password);
         $superAdmin = User::createSuperAdmin($username, $hashedPassword, $firstName, $lastName);
 
         $this->entityManager->persist($superAdmin);
