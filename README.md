@@ -37,6 +37,7 @@ The architecture follows Domain-Driven Design principles, so the code is organiz
 5. Enter the PHP container `docker exec -it micro-erp-php sh`
 6. Run migrations `php bin/console doctrine:migrations:migrate`
 7. Create the super admin with the custom command and follow the prompts `php bin/console app:create-super-admin`
+8. Run the tests: `php bin/phpunit --testdox`
 
 ## Testing the API
 

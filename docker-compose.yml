@@ -9,6 +9,9 @@ services:
       - 80:80
   php:
     container_name: micro-erp-php
+    depends_on:
+      db:
+        condition: service_healthy
     build:
       context: .
       dockerfile: docker/php/Dockerfile
@@ -21,9 +24,15 @@ services:
       - 9000
   db:
     image: mysql:8.0.45
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "test", "-ptest"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
     container_name: micro-erp-mysql
     volumes:
       - db-data:/var/lib/mysql #You always reference the key, not the name a.k.a. db-data. MySQL by default stores data in /var/lib/mysql
+      - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
     env_file:
       - .env
     ports:

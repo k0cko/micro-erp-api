@@ -14,5 +14,7 @@ if [ -z "$(grep '^JWT_PASSPHRASE=' /app/.env | cut -d '=' -f2)" ]; then
     sed -i "s/^JWT_PASSPHRASE=.*/JWT_PASSPHRASE=$PASSPHRASE/" /app/.env
 fi
 
+php bin/console --env=test doctrine:database:create --if-not-exists
+php bin/console --env=test doctrine:schema:create
 php bin/console lexik:jwt:generate-keypair --skip-if-exists
 php-fpm
