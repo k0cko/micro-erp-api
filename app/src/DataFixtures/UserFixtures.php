@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\User;
+use App\Enum\UserRole;
 use App\Service\User\PasswordHasher;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -15,22 +16,41 @@ class UserFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
-        $user = User::createSuperAdmin(
-            'test',
+        $superAdminUser = User::createSuperAdmin(
+            'super_admin_user',
             $this->passwordHasher->hash('password'),
-            'test',
-            'test',
+            'super_admin_user',
+            'super_admin_user',
         );
 
-        $deletedUser = User::createSuperAdmin(
+        $adminUser = new User(
+            'admin_user',
+            $this->passwordHasher->hash('password'),
+            'admin_user',
+            'admin_user',
+            UserRole::Admin,
+        );
+
+        $workerUser = new User(
+            'worker_user',
+            $this->passwordHasher->hash('password'),
+            'worker_user',
+            'worker_user',
+            UserRole::Worker,
+        );
+
+        $deletedUser = new User(
             'deleted_user',
             $this->passwordHasher->hash('password'),
-            'deleted',
-            'deleted',
+            'deleted_user',
+            'deleted_user',
+            UserRole::Worker,
         );
         $deletedUser->softDelete();
 
-        $manager->persist($user);
+        $manager->persist($superAdminUser);
+        $manager->persist($adminUser);
+        $manager->persist($workerUser);
         $manager->persist($deletedUser);
         $manager->flush();
     }

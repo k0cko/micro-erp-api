@@ -31,7 +31,7 @@ class AuthControllerTest extends WebTestCase
             uri: '/login',
             server: ['CONTENT_TYPE' => 'application/json'],
             content: json_encode([
-                'username' => 'test',
+                'username' => 'worker_user',
                 'password' => 'password',
             ])
         );
@@ -49,7 +49,7 @@ class AuthControllerTest extends WebTestCase
             uri: '/login',
             server: ['CONTENT_TYPE' => 'application/json'],
             content: json_encode([
-                'username' => 'test',
+                'username' => 'worker_user',
                 'password' => 'wrong_password',
             ])
         );
