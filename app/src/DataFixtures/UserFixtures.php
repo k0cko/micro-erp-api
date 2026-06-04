@@ -10,6 +10,8 @@ use Doctrine\Persistence\ObjectManager;
 
 class UserFixtures extends Fixture
 {
+    public const ADMIN_USER_REFERENCE = 'admin-user';
+
     public function __construct(
         private readonly PasswordHasher $passwordHasher,
     ) {}
@@ -53,5 +55,7 @@ class UserFixtures extends Fixture
         $manager->persist($workerUser);
         $manager->persist($deletedUser);
         $manager->flush();
+
+        $this->setReference(self::ADMIN_USER_REFERENCE, $adminUser);
     }
 }
